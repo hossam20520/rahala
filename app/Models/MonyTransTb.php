@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MonyTransTb extends Model
 {
     
+    public $timestamps = false;
     protected $table = 'MonyTransTb';
 
     protected $fillable = [
