@@ -32,6 +32,11 @@ Route::group([
 
 
 Route::post("device/auth/login/", "device\AuthController@login");
+
+
+Route::post("device/getWallet", "device\AuthController@wallet");
+
+
 Route::post("device/auth/register/", "device\AuthController@register");
 Route::get("device/branches/", "device\AuthController@getBranches");
 Route::get("device/fcurruncy/", "device\AuthController@getFcurrency");
