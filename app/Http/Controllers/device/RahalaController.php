@@ -5,6 +5,8 @@ namespace App\Http\Controllers\device;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CurrencyMainTb;
+use App\Models\CoBranchTb;
+
 
 
 class RahalaController extends Controller
@@ -25,8 +27,10 @@ class RahalaController extends Controller
 
         $currency = CurrencyMainTb::get();
 
-
-        return response()->json(['currencies' =>  $currency       ], 200);
+        $branches = CoBranchTb::get();
+        
+ 
+        return response()->json(['currencies' =>  $currency  , 'branches' =>  $branches        ], 200);
      }
 
      
