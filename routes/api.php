@@ -41,8 +41,8 @@ Route::post("device/auth/register/", "device\AuthController@register");
 Route::get("device/branches/", "device\AuthController@getBranches");
 Route::get("device/fcurruncy/", "device\AuthController@getFcurrency");
 
+Route::get("device/currencies/", "device\RahalaController@getCurrenices");
 
- 
 
 
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
