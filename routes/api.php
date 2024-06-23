@@ -43,7 +43,7 @@ Route::get("device/fcurruncy/", "device\AuthController@getFcurrency");
 
 Route::get("device/currencies/", "device\RahalaController@getCurrenices");
 
-
+Route::get("device/sendmoney/detail/", "device\RahalaController@GetDetailsSendMoney");
 
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 

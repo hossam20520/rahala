@@ -19,5 +19,16 @@ class RahalaController extends Controller
 
         return response()->json(['currencies' =>  $currency       ], 200);
      }
+
+
+     public function GetDetailsSendMoney(Request $request){
+
+        $currency = CurrencyMainTb::get();
+
+
+        return response()->json(['currencies' =>  $currency       ], 200);
+     }
+
+     
     
 }
