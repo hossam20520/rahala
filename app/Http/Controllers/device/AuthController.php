@@ -314,7 +314,8 @@ class AuthController extends Controller
         $monyTransf->SCurenncyID = $request['SCurenncyID'];
         $monyTransf->RCurenncyID = $request['RCurenncyID'];
         $monyTransf->Value = $request['Value'];
-        $monyTransf->DeliveredStatus = $request['DeliveredStatus'];
+        $monyTransf->DeliveredStatus = '0';
+        $monyTransf->TypeID = $request['DeliveredStatus'];
         $monyTransf->save();
 
 

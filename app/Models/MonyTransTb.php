@@ -17,7 +17,7 @@ class MonyTransTb extends Model
         'RCurenncyID',
         'Value',
         'DeliveredStatus',
-
+        'TypeID',
     ];
 
 
