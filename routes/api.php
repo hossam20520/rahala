@@ -50,7 +50,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");
 
 
-
+ Route::get("device/sent/", "device\RahalaController@GetSentMoney");
 
 
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CurrencyMainTb;
 use App\Models\CoBranchTb;
-
+use App\Models\MonyTransTb;
 
 
 class RahalaController extends Controller
@@ -34,5 +34,14 @@ class RahalaController extends Controller
      }
 
      
+     public function GetSentMoney(Request $request){
+       $user =   Auth::user();
     
+       $moneyTrans = MonyTransTb::where('CodeID' , $user->account_ID  )->get();
+
+      // $branches = CoBranchTb::get();
+      
+
+      return response()->json(['sent' =>   $moneyTrans      ], 200);
+   }
 }
