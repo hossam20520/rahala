@@ -37,7 +37,7 @@ class RahalaController extends Controller
      public function GetSentMoney(Request $request){
        $user =   Auth::user();
     
-       $moneyTrans = MonyTransTb::where('CodeID' , $user->account_ID  )->get();
+       $moneyTrans = MonyTransTb::with('branch')->where('CodeID' , $user->account_ID  )->get();
 
       // $branches = CoBranchTb::get();
       
