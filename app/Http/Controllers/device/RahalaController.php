@@ -18,11 +18,18 @@ class RahalaController extends Controller
 
     public function getTheOwntrans(Request $request){
 
-      $accActivtb  = AccounsActivityTb::get();
+      $from_date = $request->from_date;
+
+      $to_date = $request->to_date;
+
+      $type =  $request->type;
+      
+      $accActivtb  = AccounsActivityTb::where('TypeMobile' , $type)->whereBetween('InsertDate', [$from_date, $to_date])->get();
 
 
       return response()->json(['history' =>  $accActivtb       ], 200);
-   }
+       
+     }
 
 
 
