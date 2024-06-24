@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CurrencyMainTb;
 use App\Models\CoBranchTb;
 use App\Models\MonyTransTb;
-
+use Illuminate\Support\Facades\Auth;
 
 class RahalaController extends Controller
 {
