@@ -10,7 +10,7 @@ class CurrencyMainTb extends Model
     protected $table = 'CurrencyMainTb';
 
     protected $fillable = [
-         'CuName', 'IBAN', 'SellPrice', 'CurCode', 'IsActive' 
+        'ID', 'CuName', 'IBAN', 'SellPrice', 'CurCode', 'IsActive' 
   
 
     ];

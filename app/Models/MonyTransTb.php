@@ -27,7 +27,16 @@ class MonyTransTb extends Model
         return $this->belongsTo('App\Models\CoBranchTb' , 'DeliveryPlaceID' , 'ID' );
     }
     
+    public function SCurrency()
+    {
+        return $this->belongsTo('App\Models\CurrencyMainTb' , 'SCurenncyID' , 'ID' );
+    }
 
+
+    public function RCurrency()
+    {
+        return $this->belongsTo('App\Models\CurrencyMainTb' , 'RCurenncyID' , 'ID' );
+    }
 
 }
 
