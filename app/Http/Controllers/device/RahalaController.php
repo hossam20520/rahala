@@ -7,11 +7,23 @@ use Illuminate\Http\Request;
 use App\Models\CurrencyMainTb;
 use App\Models\CoBranchTb;
 use App\Models\MonyTransTb;
+use App\Models\AccounsActivityTb;
+
 use Illuminate\Support\Facades\Auth;
 
 class RahalaController extends Controller
 {
     //
+
+
+    public function getTheOwntrans(Request $request){
+
+      $accActivtb  = AccounsActivityTb::get();
+
+
+      return response()->json(['history' =>  $accActivtb       ], 200);
+   }
+
 
 
     public function getCurrenices(Request $request){

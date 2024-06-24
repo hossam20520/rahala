@@ -52,12 +52,12 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
  Route::get("device/sent/", "device\RahalaController@GetSentMoney");
 
+ Route::get("device/history/", "device\RahalaController@getTheOwntrans");
 
 
 
 
-
-
+ 
 
 
  
