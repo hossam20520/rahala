@@ -14,7 +14,7 @@ class CoBranchTb extends Model
     protected $table = 'CoBranchTb';
 
     protected $fillable = [
-         'BName', 'Phone1', 'Phone2', 'BAddress', 'CityID', 'CountryID',
+           'ID', 'BName', 'Phone1', 'Phone2', 'BAddress', 'CityID', 'CountryID',
         'IsActive' 
      
 
