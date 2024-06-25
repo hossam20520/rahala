@@ -57,7 +57,7 @@ class RahalaController extends Controller
        foreach ($items as $item  ) {
           
         $itemsData[] = [
-          'Sh_followingID' => $ship->ID,
+          'Sh_followingID' => $ship->id,
           'Quantity' => $item['qty'],
           'Price' => $item['price'],
           'TotalPrice' =>  ( $item['qty']  * $item['price'] ),
