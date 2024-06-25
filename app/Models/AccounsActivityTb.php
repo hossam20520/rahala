@@ -20,5 +20,16 @@ class AccounsActivityTb extends Model
         'Value_Mobile',
 
     ];
+
+
+    public function branch()
+    {
+        return $this->belongsTo('App\Models\CoBranchTb' , 'BranchID' , 'ID' );
+    }
+    
+    // public function  Currency()
+    // {
+    //     return $this->belongsTo('App\Models\CurrencyMainTb' , 'SCurenncyID' , 'ID' );
+    // }
  
 }
