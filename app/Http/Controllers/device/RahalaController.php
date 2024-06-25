@@ -9,7 +9,7 @@ use App\Models\CoBranchTb;
 use App\Models\MonyTransTb;
 use App\Models\AccounsActivityTb;
 use App\Models\RhallaMobile_ShippingFollwoingTb;
- 
+use App\Models\FollowingDetails;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -24,21 +24,51 @@ class RahalaController extends Controller
      
       $ship = new RhallaMobile_ShippingFollwoingTb;
        $user =   Auth::user();
+
+
+       $items = $request->items;
+ 
+       $totalAmount = 0;
+       $totalPrice = 0;
+       foreach ($items as $item  ) {
+          
+        $totalAmount +=   $item['qty'];
+
+        $totalPrice  +=   $item['price'];
+
+ 
+       }
+
+
        $ship->CodeID =   $user->account_ID;
        $ship->TypeID =   4;
        $ship->RecievedName =   $request->RecievedName;
        $ship->RPhone1 =   $request->RPhone1;
        $ship->RPhone2 =   $request->RPhone2;
+       $ship->Qt =    $totalAmount;
+       $ship->TotalPrice =   $totalPrice;
+       $ship->save();
+ 
 
-      //  $ship->save();
-       $items = $request->items;
-       return response()->json(['history' =>   $items[0]['category_id']      ], 200);
-      foreach ($items as $item  ) {
+
        
+       foreach ($items as $item  ) {
+          
+        $itemsData[] = [
+          'Sh_followingID' => $ship->ID,
+          'Quantity' => $item['qty'],
+          'Price' => $item['price'],
+          'TotalPrice' =>  ( $item['qty']  * $item['price'] ),
+          'CategoryID' => $item['category_id'],
+  
+      ];
+ 
+       }
 
 
-      }
+       FollowingDetails::insert($itemsData);
 
+       return response()->json(['status' => "success" ,  'message'=> 'success' ], 200);
 
     }
 
