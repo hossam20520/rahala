@@ -47,6 +47,8 @@ class RahalaController extends Controller
        $ship->RecievedName =   $request->RecievedName;
        $ship->RPhone1 =   $request->RPhone1;
        $ship->RPhone2 =   $request->RPhone2;
+       $ship->DeliveryPlaceID =   $request->DeliveryPlaceID;
+       
        $ship->Qt =    $totalAmount;
        $ship->TotalPrice =   $totalPrice;
        $ship->save();
