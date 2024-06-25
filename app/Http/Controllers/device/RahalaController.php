@@ -24,8 +24,13 @@ class RahalaController extends Controller
 
       $type =  $request->type;
 
- 
-      $accActivtb  = AccounsActivityTb::with('branch' , 'currency')->where('TypeMobile' , $type)->whereBetween('InsertDate', [$from_date, $to_date])->get();
+ if($type == "ALL"){
+   $accActivtb  = AccounsActivityTb::with('branch' , 'currency')->whereBetween('InsertDate', [$from_date, $to_date])->get();
+
+ }else{
+   $accActivtb  = AccounsActivityTb::with('branch' , 'currency')->where('TypeMobile' , $type)->whereBetween('InsertDate', [$from_date, $to_date])->get();
+
+ }
 
 
       return response()->json(['history' =>  $accActivtb       ], 200);
