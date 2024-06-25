@@ -10,6 +10,8 @@ use App\Models\MonyTransTb;
 use App\Models\AccounsActivityTb;
 use App\Models\RhallaMobile_ShippingFollwoingTb;
 use App\Models\FollowingDetails;
+use App\Models\RhallaMobile_FollowingDetails;
+
 
 use Illuminate\Support\Facades\Auth;
 
@@ -66,7 +68,7 @@ class RahalaController extends Controller
        }
 
 
-       FollowingDetails::insert($itemsData);
+       RhallaMobile_FollowingDetails::insert($itemsData);
 
        return response()->json(['status' => "success" ,  'message'=> 'success' ], 200);
 
