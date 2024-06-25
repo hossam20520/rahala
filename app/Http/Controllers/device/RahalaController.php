@@ -8,12 +8,40 @@ use App\Models\CurrencyMainTb;
 use App\Models\CoBranchTb;
 use App\Models\MonyTransTb;
 use App\Models\AccounsActivityTb;
+use App\Models\RhallaMobile_ShippingFollwoingTb;
+
+
 
 use Illuminate\Support\Facades\Auth;
 
 class RahalaController extends Controller
 {
     //
+
+
+
+
+    public function addShipping(Request $request){
+     
+      $ship = new RhallaMobile_ShippingFollwoingTb;
+       $user =   Auth::user();
+       $ship->CodeID =   $user->account_ID;
+       $ship->TypeID =   4;
+       $ship->RecievedName =   $request->RecievedName;
+       $ship->RPhone1 =   $request->RPhone1;
+       $ship->RPhone2 =   $request->RPhone2;
+
+      //  $ship->save();
+       $items = $request->items;
+       return response()->json(['history' =>   $items       ], 200);
+      foreach ($items as $item  ) {
+       
+
+
+      }
+
+
+    }
 
 
     public function getTheOwntrans(Request $request){

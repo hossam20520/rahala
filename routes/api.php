@@ -54,7 +54,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
  Route::get("device/history/", "device\RahalaController@getTheOwntrans");
 
-
+ Route::post("device/shipment/add", "device\RahalaController@addShipping");
 
 
  
