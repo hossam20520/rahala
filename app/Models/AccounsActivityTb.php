@@ -18,6 +18,7 @@ class AccounsActivityTb extends Model
         'BranchID',
         'TypeMobile',
         'Value_Mobile',
+        'CurenncyID'
 
     ];
 
@@ -27,9 +28,9 @@ class AccounsActivityTb extends Model
         return $this->belongsTo('App\Models\CoBranchTb' , 'BranchID' , 'ID' );
     }
     
-    // public function  Currency()
-    // {
-    //     return $this->belongsTo('App\Models\CurrencyMainTb' , 'SCurenncyID' , 'ID' );
-    // }
+    public function  currency()
+    {
+        return $this->belongsTo('App\Models\CurrencyMainTb' , 'CurenncyID' , 'ID' );
+    }
  
 }
