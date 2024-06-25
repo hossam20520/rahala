@@ -22,7 +22,7 @@ class RahalaController extends Controller
 
     public function addShipping(Request $request){
      
-      $ship = new RhallaMobile_ShippingFollwoingTb;
+   
        $user =   Auth::user();
 
 
@@ -39,7 +39,7 @@ class RahalaController extends Controller
  
        }
 
-
+       $ship = new RhallaMobile_ShippingFollwoingTb;
        $ship->CodeID =   $user->account_ID;
        $ship->TypeID =   4;
        $ship->RecievedName =   $request->RecievedName;
@@ -55,7 +55,7 @@ class RahalaController extends Controller
        foreach ($items as $item  ) {
           
         $itemsData[] = [
-          'Sh_followingID' => $ship->ID,
+          'Sh_followingID' => $ship->id,
           'Quantity' => $item['qty'],
           'Price' => $item['price'],
           'TotalPrice' =>  ( $item['qty']  * $item['price'] ),
