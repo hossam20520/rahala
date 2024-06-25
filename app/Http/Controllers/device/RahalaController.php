@@ -9,8 +9,7 @@ use App\Models\CoBranchTb;
 use App\Models\MonyTransTb;
 use App\Models\AccounsActivityTb;
 use App\Models\RhallaMobile_ShippingFollwoingTb;
-
-
+ 
 
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +32,7 @@ class RahalaController extends Controller
 
       //  $ship->save();
        $items = $request->items;
-       return response()->json(['history' =>   $items       ], 200);
+       return response()->json(['history' =>   $items[0]['category_id']      ], 200);
       foreach ($items as $item  ) {
        
 
