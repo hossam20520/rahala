@@ -36,7 +36,7 @@ class RahalaController extends Controller
           
         $totalAmount +=   $item['qty'];
 
-        $totalPrice  +=   $item['price'];
+        $totalPrice  +=  ( $item['price'] * $item['qty']);
 
  
        }
