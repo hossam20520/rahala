@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FollowingDetails extends Model
 {
+
+    public $timestamps = false;
     protected $table = 'FollowingDetails';
 
     protected $fillable = [

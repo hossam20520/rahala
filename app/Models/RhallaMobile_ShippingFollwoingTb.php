@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RhallaMobile_ShippingFollwoingTb extends Model
 {
-    
+    public $timestamps = false;
     protected $table = 'RhallaMobile_ShippingFollwoingTb';
 
     protected $fillable = [
