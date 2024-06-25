@@ -12,7 +12,7 @@ use App\Models\RhallaMobile_ShippingFollwoingTb;
 use App\Models\FollowingDetails;
 use App\Models\RhallaMobile_FollowingDetails;
 
-
+use App\Models\category;
 use Illuminate\Support\Facades\Auth;
 
 class RahalaController extends Controller
