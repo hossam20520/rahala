@@ -27,12 +27,11 @@ class RahalaController extends Controller
 
     public function getDropDownShip(Request $request){
 
-
+      $user =   Auth::user();
       
    
-      $branches = CoBranchTb::where('ID', '!=', 1)->get();
+      $branches = CoBranchTb::where('ID', '!=',  $user->BranchID)->get();
       $category = category::get();
-
 
  
       return response()->json([  'branches' =>  $branches  , 'category'=>  $category ,       ], 200);

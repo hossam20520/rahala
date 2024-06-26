@@ -146,38 +146,38 @@ class AuthController extends Controller
 }
 
 
-    public function profile(Request $request){
-        $user = Auth::user(); 
-        $currentDate = Carbon::now()->format('Y-m-d');
+    // public function profile(Request $request){
+    //     $user = Auth::user(); 
+    //     $currentDate = Carbon::now()->format('Y-m-d');
 
              
-        $subscription =   Subscription::where('deleted_at' , '=' , null)->where('user_id' , $user->id)->whereDate('end_date', '>=', $currentDate)->first();
+    //     $subscription =   Subscription::where('deleted_at' , '=' , null)->where('user_id' , $user->id)->whereDate('end_date', '>=', $currentDate)->first();
 
-        $daysLeft = 0;
-        if( $subscription){
-            $daysLeft = Carbon::parse($currentDate)->diffInDays( $subscription->end_date);
-        }
+    //     $daysLeft = 0;
+    //     if( $subscription){
+    //         $daysLeft = Carbon::parse($currentDate)->diffInDays( $subscription->end_date);
+    //     }
      
  
 
-        return response()->json(['user' =>  $user   , 'subscription'=>   $daysLeft   ], 200);
+    //     return response()->json(['user' =>  $user   , 'subscription'=>   $daysLeft   ], 200);
 
-    }
+    // }
 
-    public function updateProfile(Request $request){
+    // public function updateProfile(Request $request){
  
-        $helpers = new helpers();
-        $user =  $helpers->getInfo();
-        User::whereId($user->id)->update([
-            'firstname' => $request['firstname'],
-            'lastname' =>  $request['lastname'],
-            'email' =>  $request['email'],
-            'phone' => $request['phone'],
-        ]);
+    //     $helpers = new helpers();
+    //     $user =  $helpers->getInfo();
+    //     User::whereId($user->id)->update([
+    //         'firstname' => $request['firstname'],
+    //         'lastname' =>  $request['lastname'],
+    //         'email' =>  $request['email'],
+    //         'phone' => $request['phone'],
+    //     ]);
 
 
-        return response()->json(['status' => "success" ,  'message'=> 'success'   ], 200);
-    }
+    //     return response()->json(['status' => "success" ,  'message'=> 'success'   ], 200);
+    // }
 
 
     public function getInfoAbout(){
@@ -193,114 +193,7 @@ class AuthController extends Controller
 
     }
 
-
-    public function loginWithSocial(Request $request){
-
-       
-        $social = $request->social;
-        $social_id = $request->social_id;
-        $email = $request->email;
-        $type = $request->type;
-        $phone = $request->phone;
-        // $existingUser = User::where('email', $email)->first();
-
-        $existingUser = User::where(function ($query) use ($email, $phone) {
-            $query->where('email', $email)
-                  ->orWhere('phone', $phone);
-        })->first();
-
  
-        // 'social_id' ,  $social_id  )->where('type', $type
- 
-
-        if ($existingUser) {
-            // User exists, authenticate the user
-           
-        //    $user =  Auth::login($existingUser, true);
-           $accessToken = $existingUser->createToken('AuthToken')->accessToken;
-       
-        //    return $accessToken;
-        } else {
-
-                    
-         $username = explode("@" , $request['email']);
-         if($type == "user"){
-               $role = 3;
-    
-         }else{
-            $role = 2;
-         }
-
-        $filename = 'no_avatar.png';
-        $User = new User;
-        $User->firstname = $request['firstname'];
-        $User->lastname  = $request['lastname'];
-        $User->username  = $username[0];
-        $User->email     = $request['email'];
-        $User->phone     = $request['phone'];
-        $User->password  = Hash::make($request['password']);
-        $User->avatar    = $filename;
-        $User->role_id   = $role;
-        $User->save();
-
-        $existingUser  = User::create([
-                'firstname' => $request['firstname'],
-                'lastname' =>  $request['lastname'],
-                'username' => $username[0],
-                'email' =>  $request['email'],
-                'phone' => $request['phone'],
-                'password' => Hash::make($request['password']),
-                'avatar' => $filename,
-                'role_id' => $role,
-
-            ]);
-
-            $role_user = new role_user;
-            $role_user->user_id =   $existingUser->id;
-            $role_user->role_id = $role;
-            $role_user->save();
-
-            // $user = Auth::login($newUser, true);
-
- 
-            $accessToken = $existingUser->createToken('AuthToken')->accessToken;
-        }
-
-
-
- 
-        
- 
-        
-    if($type == "provider"){
-        $service =  [
-            'isProvider' => true,
-            'flight' => true,
-            'car' => true,
-            'hotel' => true
-        ];
-    }else{
-        $service =  [
-            'isProvider' => false,
-            'flight' => false,
-            'car' => false,
-            'hotel' => false
-        ];
-       
-    }
-
-
-       
-        $user = array( 'user'=>    $existingUser   ,   'token' => $accessToken , 'service_provider' => $service );
- 
-        return response()->json(['status' => "success" ,  'message'=> 'success' 
-          , 'data'=> $user 
-         
-        
-        ], 200);
-
-
-    }
 
     
     public function sendMoney(Request $request){
