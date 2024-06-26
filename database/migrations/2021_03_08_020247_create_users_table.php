@@ -28,6 +28,8 @@ class CreateUsersTable extends Migration {
 
 			$table->integer('account_ID')->nullable();
 			$table->integer('type')->default(1);
+			$table->integer('BranchID')->default(1);
+			
 			$table->boolean('statut')->default(1);
 			$table->timestamps(6);
 			$table->softDeletes();
