@@ -31,11 +31,11 @@ class RahalaController extends Controller
 
 
       // $user =   Auth::user();
-    $excludeBranchId = 1; // Replace with the ID you want to exclude
+    $excludeBranchId = "1"; // Replace with the ID you want to exclude
     
     // Filter branches to exclude the specified ID
     $filteredBranches = $branches->reject(function ($branch) use ($excludeBranchId) {
-        return $branch->id == $excludeBranchId;
+        return $branch->ID == $excludeBranchId;
     });
 
       return response()->json([  'branches' =>  $filteredBranches  , 'category'=>  $category ,       ], 200);
