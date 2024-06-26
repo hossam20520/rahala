@@ -22,7 +22,7 @@ class RahalaController extends Controller
 
     public function getDetail(Request $request , $id){
 
-      $following = RhallaMobile_ShippingFollwoingTb::with('branch')->where('ID' , $id)->first();
+      $following = RhallaMobile_ShippingFollwoingTb::with('branch')->where('id' , $id)->first();
 
       return response()->json([  'following' =>  $following  ], 200);
     }
