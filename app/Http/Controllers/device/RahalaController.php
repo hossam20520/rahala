@@ -26,19 +26,16 @@ class RahalaController extends Controller
 
 
     public function getDropDownShip(Request $request){
-      $branches = CoBranchTb::get();
+
+
+      
+   
+      $branches = CoBranchTb::where('ID', '!=', 1)->get();
       $category = category::get();
 
 
-      // $user =   Auth::user();
-    $excludeBranchId = "1"; // Replace with the ID you want to exclude
-    
-    // Filter branches to exclude the specified ID
-    $filteredBranches = $branches->reject(function ($branch) use ($excludeBranchId) {
-        return $branch->ID == $excludeBranchId;
-    });
-
-      return response()->json([  'branches' =>  $filteredBranches  , 'category'=>  $category ,       ], 200);
+ 
+      return response()->json([  'branches' =>  $branches  , 'category'=>  $category ,       ], 200);
     }
 
 
