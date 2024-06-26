@@ -57,9 +57,9 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
  Route::post("device/shipment/add", "device\RahalaController@addShipping");
  
  Route::get("device/shipment/dropdown", "device\RahalaController@getDropDownShip");
-
+ Route::get("device/shipment/getlist", "device\RahalaController@GetListShipment");
  
-
+ 
 
  
     Route::get("device/profile", "device\AuthController@profile");
