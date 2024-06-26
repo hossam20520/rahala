@@ -59,8 +59,8 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
  Route::get("device/shipment/dropdown", "device\RahalaController@getDropDownShip");
  Route::get("device/shipment/getlist", "device\RahalaController@GetListShipment");
  
+ Route::get("device/shipdetail/shipdetail/{id}", "device\RahalaController@getDetail");
  
-
  
     Route::get("device/profile", "device\AuthController@profile");
     Route::post("device/profile/image", "device\AuthController@changeImage");

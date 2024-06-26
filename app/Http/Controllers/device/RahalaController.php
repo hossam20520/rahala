@@ -20,6 +20,13 @@ class RahalaController extends Controller
     //
 
 
+    public function getDetail(Request $request , $id){
+
+      $following = RhallaMobile_ShippingFollwoingTb::with('branch')->where('ID' , $id)->first();
+
+      return response()->json([  'following' =>  $following  ], 200);
+    }
+
    public function GetListShipment(Request $request){
     $user = Auth::user();
 
