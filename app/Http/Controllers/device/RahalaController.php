@@ -71,17 +71,46 @@ class RahalaController extends Controller
  
        }
 
-       $ship = new RhallaMobile_ShippingFollwoingTb;
-       $ship->CodeID =   $user->account_ID;
-       $ship->TypeID =   4;
-       $ship->RecievedName =   $request->RecievedName;
-       $ship->RPhone1 =   $request->RPhone1;
-       $ship->RPhone2 =   $request->RPhone2;
-       $ship->DeliveryPlaceID =   $request->DeliveryPlaceID;
-       
-       $ship->Qt =    $totalAmount;
-       $ship->TotalPrice =   $totalPrice;
-       $ship->save();
+
+       if($request->edit == "yes"){
+        $ship = new RhallaMobile_ShippingFollwoingTb;
+        $ship->CodeID =   $user->account_ID;
+        $ship->TypeID =   4;
+        $ship->RecievedName =   $request->RecievedName;
+        $ship->RPhone1 =   $request->RPhone1;
+        $ship->RPhone2 =   $request->RPhone2;
+        $ship->DeliveryPlaceID =   $request->DeliveryPlaceID;
+        
+        $ship->Qt =    $totalAmount;
+        $ship->TotalPrice =   $totalPrice;
+        $ship->save();
+
+       }else{
+
+        $ship =  RhallaMobile_ShippingFollwoingTb::where('id' , $request->ID )->update([
+          'RecievedName'=> $request->RecievedName,
+          'RPhone1'=> $request->RPhone1,
+          'RPhone2'=> $request->RPhone2,
+          'Qt'=> $totalAmount,
+          'TotalPrice'=> $totalPrice,
+         
+        ]);
+
+
+        foreach ($items as $item) {
+          $itemsData = [
+              'Quantity' => $item['qty'],
+              'Price' => $item['price'],
+              'TotalPrice' => ($item['qty'] * $item['price']),
+              'CategoryID' => $item['category_id'],
+          ];
+      
+          RhallaMobile_FollowingDetails::where('id', $item['id'])->update($itemsData);
+      }
+      return response()->json(['status' => "success" ,  'message'=> 'success' ], 200);
+
+       }
+    
  
 
 
