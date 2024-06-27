@@ -25,6 +25,6 @@ class RhallaMobile_ShippingFollwoingTb extends Model
 
     public function items()
     {
-        return $this->hasMany('App\Models\RhallaMobile_FollowingDetails' , 'ID' , 'Sh_followingID' );
+        return $this->hasMany('App\Models\RhallaMobile_FollowingDetails' , 'Sh_followingID' , 'ID' );
     }
 }
