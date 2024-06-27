@@ -23,5 +23,8 @@ class RhallaMobile_ShippingFollwoingTb extends Model
         return $this->belongsTo('App\Models\CoBranchTb' , 'DeliveryPlaceID' , 'ID' );
     }
 
-    
+    public function items()
+    {
+        return $this->hasMany('App\Models\RhallaMobile_FollowingDetails' , 'ID' , 'Sh_followingID' );
+    }
 }
