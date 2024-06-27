@@ -75,7 +75,7 @@ class RahalaController extends Controller
        if($request->edit == "yes"){
 
 
-        $ship =  RhallaMobile_ShippingFollwoingTb::where('id' , $request->ID )->update([
+        $ship =  RhallaMobile_ShippingFollwoingTb::where('ID' , $request->ID )->update([
           'RecievedName'=> $request->RecievedName,
           'RPhone1'=> $request->RPhone1,
           'RPhone2'=> $request->RPhone2,
