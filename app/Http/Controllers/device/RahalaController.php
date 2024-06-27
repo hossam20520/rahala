@@ -85,16 +85,16 @@ class RahalaController extends Controller
         ]);
 
 
-        foreach ($items as $item) {
-          $itemsData = [
-              'Quantity' => $item['qty'],
-              'Price' => $item['price'],
-              'TotalPrice' => ($item['qty'] * $item['price']),
-              'CategoryID' => $item['category_id'],
-          ];
+      //   foreach ($items as $item) {
+      //     $itemsData = [
+      //         'Quantity' => $item['qty'],
+      //         'Price' => $item['price'],
+      //         'TotalPrice' => ($item['qty'] * $item['price']),
+      //         'CategoryID' => $item['category_id'],
+      //     ];
       
-          RhallaMobile_FollowingDetails::where('id', $item['id'])->update($itemsData);
-      }
+      //     RhallaMobile_FollowingDetails::where('id', $item['id'])->update($itemsData);
+      // }
 
       return response()->json(['status' => "success" ,  'message'=> 'success' ], 200);
 
