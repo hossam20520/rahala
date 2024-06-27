@@ -14,4 +14,10 @@ class RhallaMobile_FollowingDetails extends Model
         'id', 'Sh_followingID', 'Quantity', 'Price', 'TotalPrice', 'CategoryID' 
 
     ];
+
+    public function category()
+    {
+        return $this->belongsTo('App\Models\category' , 'CategoryID' , 'ID' );
+    }
+
 }
