@@ -73,19 +73,7 @@ class RahalaController extends Controller
 
 
        if($request->edit == "yes"){
-        $ship = new RhallaMobile_ShippingFollwoingTb;
-        $ship->CodeID =   $user->account_ID;
-        $ship->TypeID =   4;
-        $ship->RecievedName =   $request->RecievedName;
-        $ship->RPhone1 =   $request->RPhone1;
-        $ship->RPhone2 =   $request->RPhone2;
-        $ship->DeliveryPlaceID =   $request->DeliveryPlaceID;
-        
-        $ship->Qt =    $totalAmount;
-        $ship->TotalPrice =   $totalPrice;
-        $ship->save();
 
-       }else{
 
         $ship =  RhallaMobile_ShippingFollwoingTb::where('id' , $request->ID )->update([
           'RecievedName'=> $request->RecievedName,
@@ -107,7 +95,48 @@ class RahalaController extends Controller
       
           RhallaMobile_FollowingDetails::where('id', $item['id'])->update($itemsData);
       }
+
       return response()->json(['status' => "success" ,  'message'=> 'success' ], 200);
+
+       }else{
+
+
+        $ship = new RhallaMobile_ShippingFollwoingTb;
+        $ship->CodeID =   $user->account_ID;
+        $ship->TypeID =   4;
+        $ship->RecievedName =   $request->RecievedName;
+        $ship->RPhone1 =   $request->RPhone1;
+        $ship->RPhone2 =   $request->RPhone2;
+        $ship->DeliveryPlaceID =   $request->DeliveryPlaceID;
+        
+        $ship->Qt =    $totalAmount;
+        $ship->TotalPrice =   $totalPrice;
+        $ship->save();
+
+
+
+
+
+
+        foreach ($items as $item  ) {
+          
+          $itemsData[] = [
+            'Sh_followingID' => $ship->id,
+            'Quantity' => $item['qty'],
+            'Price' => $item['price'],
+            'TotalPrice' =>  ( $item['qty']  * $item['price'] ),
+            'CategoryID' => $item['category_id'],
+    
+        ];
+   
+         }
+  
+  
+         RhallaMobile_FollowingDetails::insert($itemsData);
+  
+         return response()->json(['status' => "success" ,  'message'=> 'success' ], 200);
+         
+     
 
        }
     
@@ -115,23 +144,7 @@ class RahalaController extends Controller
 
 
        
-       foreach ($items as $item  ) {
-          
-        $itemsData[] = [
-          'Sh_followingID' => $ship->id,
-          'Quantity' => $item['qty'],
-          'Price' => $item['price'],
-          'TotalPrice' =>  ( $item['qty']  * $item['price'] ),
-          'CategoryID' => $item['category_id'],
-  
-      ];
- 
-       }
 
-
-       RhallaMobile_FollowingDetails::insert($itemsData);
-
-       return response()->json(['status' => "success" ,  'message'=> 'success' ], 200);
 
     }
 
