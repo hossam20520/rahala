@@ -75,7 +75,7 @@ class RahalaController extends Controller
        if($request->edit == "yes"){
 
 
-        $ship =  RhallaMobile_ShippingFollwoingTb::where('ID' , $request->ID )->update([
+        $ship =  RhallaMobile_ShippingFollwoingTb::where('id' , $request->ID )->update([
           'RecievedName'=> $request->RecievedName,
           'RPhone1'=> $request->RPhone1,
           'RPhone2'=> $request->RPhone2,
@@ -83,6 +83,24 @@ class RahalaController extends Controller
           'TotalPrice'=> $totalPrice,
          
         ]);
+
+        RhallaMobile_FollowingDetails::where('Sh_followingID', $request->ID)->delete();
+
+        foreach ($items as $item  ) {
+          
+          $itemsData[] = [
+            'Sh_followingID' => $ship->id,
+            'Quantity' => $item['qty'],
+            'Price' => $item['price'],
+            'TotalPrice' =>  ( $item['qty']  * $item['price'] ),
+            'CategoryID' => $item['category_id'],
+    
+        ];
+   
+         }
+  
+  
+         RhallaMobile_FollowingDetails::insert($itemsData);
 
 
       //   foreach ($items as $item) {
