@@ -74,7 +74,7 @@ class RahalaController extends Controller
 
        if($request->edit == "yes"){
 
-
+        RhallaMobile_FollowingDetails::where('Sh_followingID', $request->ID)->delete();
         $ship =  RhallaMobile_ShippingFollwoingTb::where('id' , $request->ID )->update([
           'RecievedName'=> $request->RecievedName,
           'RPhone1'=> $request->RPhone1,
@@ -84,12 +84,12 @@ class RahalaController extends Controller
          
         ]);
 
-        RhallaMobile_FollowingDetails::where('Sh_followingID', $request->ID)->delete();
+        
 
         foreach ($items as $item  ) {
           
           $itemsData[] = [
-            'Sh_followingID' => $ship->id,
+            'Sh_followingID' => $request->ID,
             'Quantity' => $item['qty'],
             'Price' => $item['price'],
             'TotalPrice' =>  ( $item['qty']  * $item['price'] ),
