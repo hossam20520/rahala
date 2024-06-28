@@ -20,6 +20,20 @@ class RahalaController extends Controller
     //
 
 
+
+  
+
+    public function GetNotification(Request $request){
+    
+      
+      $user = Auth::user();
+      $notification  = appnotifications::where('account_id' ,$user->account_ID)->get();
+      
+      return response()->json([  'notifications' =>   $notification ], 200);
+ 
+    }
+
+
     public function getDetail(Request $request , $id){
 
       $following = RhallaMobile_ShippingFollwoingTb::with('branch' , 'items.category')->where('id' , $id)->first();

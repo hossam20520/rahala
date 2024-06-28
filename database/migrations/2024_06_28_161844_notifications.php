@@ -28,6 +28,8 @@ class Notifications extends Migration
             $table->string('read', 192)->nullable();
 			$table->timestamps(6);
 			$table->softDeletes();
+
+            
 		});
 
     }
