@@ -10,6 +10,8 @@ class appnotifications extends Model
 
     public $timestamps = false;
     protected $table = 'appnotifications';
+ 
+    
 
     protected $fillable = [
         'user_id', 'account_id', 'title', 'body', 'read', 'read' 

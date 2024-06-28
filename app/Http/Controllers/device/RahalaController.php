@@ -27,9 +27,9 @@ class RahalaController extends Controller
     
 
       $user = Auth::user();
-
+      
        
-      $notification  = appnotifications::where('account_id' ,  1)->get();
+      $notification  = appnotifications::where('account_id' , (int) $user->account_ID)->get();
       
       return response()->json([  'notifications' =>   $notification ], 200);
  
