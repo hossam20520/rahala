@@ -11,7 +11,7 @@ use App\Models\AccounsActivityTb;
 use App\Models\RhallaMobile_ShippingFollwoingTb;
 use App\Models\FollowingDetails;
 use App\Models\RhallaMobile_FollowingDetails;
-
+use App\Models\appnotifications;
 use App\Models\category;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +25,7 @@ class RahalaController extends Controller
 
     public function GetNotification(Request $request){
     
-      
+
       $user = Auth::user();
       $notification  = appnotifications::where('account_id' ,$user->account_ID)->get();
       
