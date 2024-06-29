@@ -16,6 +16,22 @@ class CurrencyPricesTb extends Model
      
 
     ];
+
+
+
+    public function FCurrency()
+    {
+        return $this->belongsTo('App\Models\CurrencyMainTb' , 'FirstCurrencyID' , 'ID' );
+    }
+
+
+    public function LCurrency()
+    {
+        return $this->belongsTo('App\Models\CurrencyMainTb' , 'SecondCurrencyID' , 'ID' );
+    }
+
+
+
 }
 
 

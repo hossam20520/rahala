@@ -224,7 +224,7 @@ class AuthController extends Controller
 
     public function getFcurrency(Request $request){
 
-        $fcurrency = CurrencyPricesTb::get();
+        $fcurrency = CurrencyPricesTb::with('FCurrency' , 'LCurrency')->get();
 
 
         return response()->json(['fcurrency' =>  $fcurrency       ], 200);
