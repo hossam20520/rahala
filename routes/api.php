@@ -59,8 +59,8 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
  Route::get("device/home/", "device\RahalaController@GetHome");
 
+ Route::get("device/status/", "device\RahalaController@GetStatusTable");
  
-
 
  Route::get("device/getnotification/", "device\RahalaController@GetNotification");
  

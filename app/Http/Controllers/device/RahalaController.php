@@ -15,9 +15,26 @@ use App\Models\appnotifications;
 use App\Models\category;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Wallet;
+use App\Models\DeliveryStatusTb;
+use App\Models\DeliveryStatusTb_Count;
+
 class RahalaController extends Controller
 {
     //
+
+
+
+    public function GetStatusTable(Request $request){
+
+      
+      $status  =  DeliveryStatusTb_Count::with('status')->first();
+  
+
+      return response()->json([  'status' =>    $status ], 200);
+
+    }
+  
+
 
 
 
@@ -43,6 +60,9 @@ class RahalaController extends Controller
       return response()->json([  'notifications' =>   $notification ], 200);
  
     }
+
+
+
 
 
     public function getDetail(Request $request , $id){
