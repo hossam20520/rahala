@@ -189,7 +189,7 @@ class AuthController extends Controller
 
     public function getInfoAbout(){
 
-         $about = About::where('deleted_at', '=', null)->first();
+         $about = About::where('id', '=', 1)->first();
         return response()->json( [
             'ar_name'=> $about->ar_name,
             'en_name'=>  $about->en_name,
