@@ -82,7 +82,7 @@ class RahalaController extends Controller
 
       $user = Auth::user();
 
-      $following = ShippingFollwoingTb::with('branch' , 'items.category')->where('CodeID' , $user->account_ID )->orderBy('ID', 'DESC')->get();
+      $following = ShippingFollwoingTb::with('branch' , 'items.category')->where('DeliveredStatus' , $id)->where('CodeID' , $user->account_ID )->orderBy('ID', 'DESC')->get();
   
       return response()->json([  'following' =>  $following  ], 200);
 
