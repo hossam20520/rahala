@@ -14,7 +14,7 @@ use App\Models\RhallaMobile_FollowingDetails;
 use App\Models\appnotifications;
 use App\Models\category;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Wallet;
 class RahalaController extends Controller
 {
     //
@@ -26,7 +26,7 @@ class RahalaController extends Controller
       $user = Auth::user();
       $wallet =  Wallet::with('currency')->where('user_CUSTEMPACCOUNTTB_id' , $user->account_ID)->first();
   
-      
+
       return response()->json([  'wallet' =>    $wallet->wallet ], 200);
 
     }
