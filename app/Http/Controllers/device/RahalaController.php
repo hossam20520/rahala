@@ -27,7 +27,7 @@ class RahalaController extends Controller
     public function GetStatusTable(Request $request){
 
       
-      $status  =  DeliveryStatusTb_Count::with('status')->first();
+      $status  =  DeliveryStatusTb_Count::with('status')->get();
   
 
       return response()->json([  'status' =>    $status ], 200);
