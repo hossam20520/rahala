@@ -21,6 +21,15 @@ class RahalaController extends Controller
 
 
 
+    public function GetHome(Request $request){
+
+      $user = Auth::user();
+      $wallet =  Wallet::with('currency')->where('user_CUSTEMPACCOUNTTB_id' , $user->account_ID)->first();
+  
+      
+      return response()->json([  'wallet' =>    $wallet->wallet ], 200);
+
+    }
   
 
     public function GetNotification(Request $request){

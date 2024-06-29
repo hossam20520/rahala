@@ -57,6 +57,9 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");
 
+ Route::get("device/home/", "device\RahalaController@GetHome");
+
+ 
 
 
  Route::get("device/getnotification/", "device\RahalaController@GetNotification");
