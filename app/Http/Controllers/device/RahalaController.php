@@ -18,6 +18,8 @@ use App\Models\Wallet;
 use App\Models\DeliveryStatusTb;
 use App\Models\DeliveryStatusTb_Count;
 
+use App\Models\ShippingFollwoingTb;
+
 class RahalaController extends Controller
 {
     //
@@ -73,6 +75,17 @@ class RahalaController extends Controller
       $category = category::get();
 
       return response()->json([  'following' =>  $following  , 'branches'=> $branches  ,  'category'=>  $category     ], 200);
+    }
+
+
+    public function GetListShipmentByID(Request $request , $id){
+
+      $user = Auth::user();
+
+      $following = ShippingFollwoingTb::with('branch' , 'items.category')->where('CodeID' , $user->account_ID )->orderBy('ID', 'DESC')->get();
+  
+      return response()->json([  'following' =>  $following  ], 200);
+
     }
 
    public function GetListShipment(Request $request){
