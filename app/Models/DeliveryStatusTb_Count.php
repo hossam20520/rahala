@@ -14,6 +14,8 @@ class DeliveryStatusTb_Count extends Model
 
     ];
 
+    
+
 
     public function status()
     {
