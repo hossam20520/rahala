@@ -6,6 +6,7 @@ use App\Models\CUSTEMPACCOUNTTB;
 use App\Models\CoBranchTb;
 use App\Models\CurrencyPricesTb;
 use App\Models\MonyTransTb;
+use App\Models\About;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
