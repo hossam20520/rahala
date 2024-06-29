@@ -78,7 +78,7 @@ class RahalaController extends Controller
     }
 
 
-    public function GetListShipmentByID(Request $request , $id){
+    public function GetListShipmentByID(Request $request , $id ){
 
       $user = Auth::user();
 
@@ -87,7 +87,7 @@ class RahalaController extends Controller
       return response()->json([  'following' =>  $following  ], 200);
 
     }
-    
+
 
    public function GetListShipment(Request $request){
     $user = Auth::user();

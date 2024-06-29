@@ -7,5 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class ShippingFollwoingTb extends Model
 {
-    use HasFactory;
+ 
+    public $timestamps = false;
+    protected $table = 'ShippingFollwoingTb';
+
+    protected $fillable = [
+        'ID', 'CodeID', 'TypeID', 'RecievedName', 'RPhone1', 'RPhone2', 'DeliveryPlaceID',
+        'Qt',
+        'TotalPrice',
+ 
+    ];
+
+
+    public function branch()
+    {
+        return $this->belongsTo('App\Models\CoBranchTb' , 'DeliveryPlaceID' , 'ID' );
+    }
+
+    public function items()
+    {
+        return $this->hasMany('App\Models\RhallaMobile_FollowingDetails' , 'Sh_followingID' , 'ID' );
+    }
+ 
+   
 }
