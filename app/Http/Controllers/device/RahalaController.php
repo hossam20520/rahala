@@ -49,8 +49,10 @@ class RahalaController extends Controller
 
       $following = RhallaMobile_ShippingFollwoingTb::with('branch' , 'items.category')->where('id' , $id)->first();
       
+      $branches = CoBranchTb::where('ID', '!=',  $user->BranchID)->get();
+      $category = category::get();
 
-      return response()->json([  'following' =>  $following  ], 200);
+      return response()->json([  'following' =>  $following  , 'branches'=> $branches  ,  'category'=>  $category     ], 200);
     }
 
    public function GetListShipment(Request $request){
