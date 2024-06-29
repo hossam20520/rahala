@@ -180,14 +180,20 @@ class AuthController extends Controller
     // }
 
 
+
+ 
+
+
+
+
     public function getInfoAbout(){
 
          $about = About::where('deleted_at', '=', null)->first();
         return response()->json( [
-            'ar_about'=> $about->ar_about,
-            'en_about'=>  $about->en_about,
-            'en_term'=>   $about->en_terms,
-            'ar_term'=> $about->ar_terms,
+            'ar_name'=> $about->ar_name,
+            'en_name'=>  $about->en_name,
+            'support_number'=>   $about->support_number,
+            'support_email'=> $about->support_email,
             
         ] , 200); 
 
