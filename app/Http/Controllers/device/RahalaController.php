@@ -92,7 +92,7 @@ class RahalaController extends Controller
    public function GetListShipment(Request $request){
     $user = Auth::user();
 
-    $following = RhallaMobile_ShippingFollwoingTb::with('branch' , 'items.category')->where('CodeID' , $user->account_ID )->orderBy('ID', 'DESC')->get();
+    $following = RhallaMobile_ShippingFollwoingTb::with('branch' , 'items.category')->where('DeliveredStatus' , '0')->where('CodeID' , $user->account_ID )->orderBy('ID', 'DESC')->get();
 
     return response()->json([  'following' =>  $following  ], 200);
    }

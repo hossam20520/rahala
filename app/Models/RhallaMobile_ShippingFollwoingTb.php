@@ -14,6 +14,7 @@ class RhallaMobile_ShippingFollwoingTb extends Model
         'ID', 'CodeID', 'TypeID', 'RecievedName', 'RPhone1', 'RPhone2', 'DeliveryPlaceID',
         'Qt',
         'TotalPrice',
+        'DeliveredStatus'
  
     ];
 
