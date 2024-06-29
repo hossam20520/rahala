@@ -10,7 +10,8 @@ class Wallet extends Model
     protected $table = 'wallet';
 
     protected $fillable = [
-        'wallet', 'currency_id'  
+        
+        'wallet', 'currency_id'  , 'user_CUSTEMPACCOUNTTB_id' , 'mobile_user_id'
   
 
     ];

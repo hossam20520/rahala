@@ -6,6 +6,9 @@ use App\Models\CUSTEMPACCOUNTTB;
 use App\Models\CoBranchTb;
 use App\Models\CurrencyPricesTb;
 use App\Models\MonyTransTb;
+use App\Models\Wallet;
+
+
 use App\Models\About;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -281,6 +284,8 @@ class AuthController extends Controller
         
        $Customdata =  CUSTEMPACCOUNTTB::where('AccountCode' , $request['code'])->first();
 
+
+
        if(!$Customdata){
            return response()->json(['error' => 'Invalid credentials'], 401);
        }
@@ -302,16 +307,16 @@ class AuthController extends Controller
        
         $User->save();
  
-        // $credentials = [
-        //      'phone'=> $request['phone'] ,
-        //      'password' => $request['password']
-        // ];
-        // $accessToken = null;
-        // if (Auth::attempt($credentials)) {
-        //     $user = Auth::user();
- 
-        //     $accessToken = $user->createToken('AuthToken')->accessToken;
-        // }
+  
+
+        
+       $wallet =  new Wallet;
+
+       $wallet->wallet = 0;
+       $wallet->currency_id = 1;
+       $wallet->user_CUSTEMPACCOUNTTB_id =  $Customdata->ID; 
+       $wallet->save();
+
 
         $accessToken = $User->createToken('AuthToken')->accessToken;
         return response()->json([
