@@ -48,7 +48,7 @@ class RahalaController extends Controller
     public function getDetail(Request $request , $id){
 
       $following = RhallaMobile_ShippingFollwoingTb::with('branch' , 'items.category')->where('id' , $id)->first();
-      
+      $user =   Auth::user();
       $branches = CoBranchTb::where('ID', '!=',  $user->BranchID)->get();
       $category = category::get();
 
