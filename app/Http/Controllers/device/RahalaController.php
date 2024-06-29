@@ -87,6 +87,7 @@ class RahalaController extends Controller
       return response()->json([  'following' =>  $following  ], 200);
 
     }
+    
 
    public function GetListShipment(Request $request){
     $user = Auth::user();
