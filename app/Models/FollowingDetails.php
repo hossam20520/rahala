@@ -12,7 +12,13 @@ class FollowingDetails extends Model
     protected $table = 'FollowingDetails';
 
     protected $fillable = [
-        'id', 'Sh_followingID', 'Quantity', 'Price', 'TotalPrice', 'CategoryID' 
+        'id', 'Sh_followingID', 'Quantity', 'Price', 'TotalPrice', 'CategoryID' , ''
 
     ];
+
+    public function category()
+    {
+        return $this->belongsTo('App\Models\category' , 'CategoryID' , 'ID' );
+    }
+    
 }

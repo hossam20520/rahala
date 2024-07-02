@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Wallet;
 use App\Models\DeliveryStatusTb;
 use App\Models\DeliveryStatusTb_Count;
-
+ 
 use App\Models\ShippingFollwoingTb;
 
 class RahalaController extends Controller
@@ -67,9 +67,17 @@ class RahalaController extends Controller
 
 
 
-    public function getDetail(Request $request , $id){
+    public function getDetail(Request $request , $id , $type){
+ 
 
-      $following = RhallaMobile_ShippingFollwoingTb::with('branch' , 'items.category')->where('id' , $id)->first();
+      if($type ==  "ORG"){
+        $following = ShippingFollwoingTb::with('branch' , 'items.category')->where('id' , $id)->first();
+      }else{
+        $following = RhallaMobile_ShippingFollwoingTb::with('branch' , 'items.category')->where('id' , $id)->first();
+      }
+
+
+
       $user =   Auth::user();
       $branches = CoBranchTb::where('ID', '!=',  $user->BranchID)->get();
       $category = category::get();

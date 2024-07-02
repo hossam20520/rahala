@@ -77,7 +77,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
  Route::get("device/shipment/byid/{id}", "device\RahalaController@GetListShipmentByID");
 
  
- Route::get("device/shipdetail/shipdetail/{id}", "device\RahalaController@getDetail");
+ Route::get("device/shipdetail/shipdetail/{id}/{type}", "device\RahalaController@getDetail");
  
  
     Route::get("device/profile", "device\AuthController@profile");
