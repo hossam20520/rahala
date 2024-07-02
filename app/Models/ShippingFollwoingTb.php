@@ -30,7 +30,7 @@ class ShippingFollwoingTb extends Model
 
     public function items()
     {
-        return $this->hasMany('App\Models\RhallaMobile_FollowingDetails' , 'Sh_followingID' , 'ID' );
+        return $this->hasMany('App\Models\FollowingDetails' , 'Sh_followingID' , 'ID' );
     }
  
    
