@@ -127,6 +127,22 @@ class RahalaController extends Controller
        $user =   Auth::user();
 
 
+       if($request->type == "ORG" && $request->edit == "yes" ){
+
+        $ship =   ShippingFollwoingTb::where('id' , $request->ID )->update([
+          'RecievedName'=> $request->RecievedName,
+          'RPhone1'=> $request->RPhone1,
+          'RPhone2'=> $request->RPhone2,
+          
+         
+        ]);
+
+
+        return response()->json(['status' => "success" ,  'message'=> 'success' ], 200);
+
+       }
+
+
        $items = $request->items;
  
        $totalAmount = 0;
