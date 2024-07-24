@@ -35,11 +35,11 @@ class RahalaController extends Controller
 
       $user = Auth::user();
 
-
-      $drivers   =  Driver_delivery_shipping::where('DriverID' , $user->account_ID )->get();
+      
+      $drivers   =  Driver_delivery_shipping::where('DriverID' ,  "3" )->get();
   
 
-      return response()->json([  'packages' =>    $user ], 200);
+      return response()->json([  'packages' =>   $drivers  ], 200);
 
     }
 
