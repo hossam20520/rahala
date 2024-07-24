@@ -34,10 +34,12 @@ class RahalaController extends Controller
     public function getPackagesDriver(Request $request){
 
       $user = Auth::user();
+
+
       $drivers   =  Driver_delivery_shipping::where('DriverID' , $user->account_ID )->get();
   
 
-      return response()->json([  'packages' =>   $drivers  ], 200);
+      return response()->json([  'packages' =>    $user ], 200);
 
     }
 

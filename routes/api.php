@@ -56,7 +56,7 @@ Route::get("device/sendmoney/detail/", "device\RahalaController@GetDetailsSendMo
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
 
-    Route::get("device/drivers/", "device\RahalaController@getPackagesDriver");
+Route::get("device/drivers/", "device\RahalaController@getPackagesDriver");
 
     
 
