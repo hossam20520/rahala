@@ -19,10 +19,28 @@ use App\Models\DeliveryStatusTb;
 use App\Models\DeliveryStatusTb_Count;
  
 use App\Models\ShippingFollwoingTb;
+use App\Models\Driver_delivery_shipping;
 
+
+
+// DriverID
 class RahalaController extends Controller
 {
     //
+
+
+
+    
+    public function getPackagesDriver(Request $request){
+
+      $user = Auth::user();
+      $drivers   =  Driver_delivery_shipping::where('DriverID' , $user->account_ID )->get();
+  
+
+      return response()->json([  'packages' =>   $drivers  ], 200);
+
+    }
+
 
 
 
