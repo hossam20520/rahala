@@ -20,4 +20,16 @@ class Driver_delivery_shipping extends Model
     ];
 
 
+    public function place()
+    {
+        return $this->belongsTo('App\Models\CoBranchTb' , 'Delivery_placeID' , 'ID' );
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo('App\Models\CoBranchTb' , 'BranchID' , 'ID' );
+    }
+
+    
+
 }
