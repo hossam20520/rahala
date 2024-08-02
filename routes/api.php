@@ -58,6 +58,10 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
 Route::get("device/drivers/", "device\RahalaController@getPackagesDriver");
 
+
+Route::get("device/bills/driver/", "device\RahalaController@GetBills");
+
+
     
 
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");

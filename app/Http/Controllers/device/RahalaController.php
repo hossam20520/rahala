@@ -21,7 +21,7 @@ use App\Models\DeliveryStatusTb_Count;
 use App\Models\ShippingFollwoingTb;
 use App\Models\Driver_delivery_shipping;
 
-
+use Illuminate\Support\Facades\DB;
 
 // DriverID
 class RahalaController extends Controller
@@ -29,6 +29,23 @@ class RahalaController extends Controller
     //
 
 
+
+
+    public function GetBills(Request $request){
+
+
+
+ 
+      
+       $results = DB::select('select a.Code_delivery , a.InsertDate ,a.Quantity , a.Paid__value , b.BName  , c.BName as Delivery_placeID 
+
+      from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.BranchID = b.id
+       inner join CoBranchTb as c on c.ID = a.Delivery_placeID
+       WHERE A.DriverID=3');
+
+       return response()->json([  'bills' =>   $results  ], 200);
+
+    }
 
     
     public function getPackagesDriver(Request $request){
