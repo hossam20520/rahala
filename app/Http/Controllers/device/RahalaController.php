@@ -33,15 +33,14 @@ class RahalaController extends Controller
 
     public function GetBills(Request $request){
 
-
+      $user = Auth::user();
 
  
       
-       $results = DB::select('select a.Code_delivery , a.InsertDate ,a.Quantity , a.Paid__value , b.BName  , c.BName as Delivery_placeID 
-
-      from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.BranchID = b.id
-       inner join CoBranchTb as c on c.ID = a.Delivery_placeID
-       WHERE A.DriverID=3');
+ $results = DB::select('select a.Code_delivery , a.InsertDate ,a.Quantity , a.Paid__value , b.BName  , c.BName as Delivery_placeID 
+from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.BranchID = b.id
+ inner join CoBranchTb as c on c.ID = a.Delivery_placeID
+ WHERE A.DriverID='.$user->account_ID );
 
        return response()->json([  'bills' =>   $results  ], 200);
 
