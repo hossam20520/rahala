@@ -54,27 +54,55 @@ from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.Bran
  $user = Auth::user();
 
  
- $results = DB::select('select x.ISID ,x.DeliveredStatus ,x.Delivery_InsertDate ,x.InsertDate ,x.RecievedName,x.Qt ,x.RPhone1 , B.DName ,IsPaid 
-,c.BName as BranchID  ,d.BName as Delivery_placeID  ,a.Code_delivery    from ( 
-select c.ISID ,c.InsertDate ,c.RecievedName , c.RPhone1 ,c.DeliveredStatus ,c. Delivery_InsertDate ,c.qt ,a.ID_Delivery  
-,CONVERT (NVARCHAR ,  CASE WHEN C.IsPaid ="False"  THEN "غير خالص"  ELSE "خالص"   END  ) AS IsPaid 
-from [dbo].[Driver_delivery_shipping] 
-as a inner join [dbo].[Driver_delivery_shipping_Details] 
-as b on a.Code_delivery = b.Code_delivery
-inner join [dbo].[internalshippingTb] as c on b.ISID COLLATE Arabic_CI_AS= c.ISID 
-union 
-select  c.ISID ,c.InsertDate ,c.RecievedName , c.RPhone1 ,c.DeliveredStatus ,c. Delivery_InsertDate,c.qt ,a.ID_Delivery  
-, CONVERT (NVARCHAR ,  CASE WHEN C.IsPaid ="False"  THEN "غير خالص"  ELSE "خالص"   END  ) AS IsPaid  from [dbo].[Driver_delivery_shipping] 
-as a inner join [dbo].[Driver_delivery_shipping_Details] 
-as b on a.Code_delivery = b.Code_delivery
-inner join [dbo].[ShippingFollwoingTb] as c on b.ISID= c.ISID COLLATE Arabic_CI_AS
-) as x 
-inner join [Driver_delivery_shipping] as a on x.ID_Delivery = a.ID_Delivery  
-inner join DeliveryStatusTb AS B ON X.DeliveredStatus = B.ID
-inner join CoBranchTb as c on a.BranchID= c.ID 
-inner join CoBranchTb as d on a.Delivery_placeID= d.ID 
-
-WHERE A.Code_delivery = "102-1" ' );
+ $results = DB::select("
+ SELECT 
+     x.ISID,
+     x.DeliveredStatus,
+     x.Delivery_InsertDate,
+     x.InsertDate,
+     x.RecievedName,
+     x.Qt,
+     x.RPhone1,
+     B.DName,
+     IsPaid,
+     c.BName as BranchID,
+     d.BName as Delivery_placeID,
+     a.Code_delivery
+ FROM (
+     SELECT 
+         c.ISID,
+         c.InsertDate,
+         c.RecievedName,
+         c.RPhone1,
+         c.DeliveredStatus,
+         c.Delivery_InsertDate,
+         c.qt,
+         a.ID_Delivery,
+         CONVERT(NVARCHAR, CASE WHEN c.IsPaid = 'False' THEN 'غير خالص' ELSE 'خالص' END) AS IsPaid
+     FROM [dbo].[Driver_delivery_shipping] AS a
+     INNER JOIN [dbo].[Driver_delivery_shipping_Details] AS b ON a.Code_delivery = b.Code_delivery
+     INNER JOIN [dbo].[internalshippingTb] AS c ON b.ISID COLLATE Arabic_CI_AS = c.ISID
+     UNION
+     SELECT 
+         c.ISID,
+         c.InsertDate,
+         c.RecievedName,
+         c.RPhone1,
+         c.DeliveredStatus,
+         c.Delivery_InsertDate,
+         c.qt,
+         a.ID_Delivery,
+         CONVERT(NVARCHAR, CASE WHEN c.IsPaid = 'False' THEN 'غير خالص' ELSE 'خالص' END) AS IsPaid
+     FROM [dbo].[Driver_delivery_shipping] AS a
+     INNER JOIN [dbo].[Driver_delivery_shipping_Details] AS b ON a.Code_delivery = b.Code_delivery
+     INNER JOIN [dbo].[ShippingFollwoingTb] AS c ON b.ISID = c.ISID COLLATE Arabic_CI_AS
+ ) AS x
+ INNER JOIN [Driver_delivery_shipping] AS a ON x.ID_Delivery = a.ID_Delivery
+ INNER JOIN DeliveryStatusTb AS B ON x.DeliveredStatus = B.ID
+ INNER JOIN CoBranchTb AS c ON a.BranchID = c.ID
+ INNER JOIN CoBranchTb AS d ON a.Delivery_placeID = d.ID
+ WHERE a.Code_delivery = ?
+", [$code]);
 
        return response()->json([  'amanat' =>   $results  ], 200);
 
