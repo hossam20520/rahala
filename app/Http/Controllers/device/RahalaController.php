@@ -55,8 +55,10 @@ from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.Bran
 
  
  $results = DB::select('select x.ISID ,x.DeliveredStatus ,x.Delivery_InsertDate ,x.InsertDate ,x.RecievedName,x.Qt ,x.RPhone1 , B.DName ,IsPaid 
-,c.BName as BranchID  ,d.BName as Delivery_placeID  ,a.Code_delivery  
- from ( select c.ISID ,c.InsertDate ,c.RecievedName , c.RPhone1 ,c.DeliveredStatus ,c. Delivery_InsertDate ,c.qt ,a.ID_Delivery ,CONVERT (NVARCHAR ,  CASE WHEN C.IsPaid = "False"  THEN "غير خالص"  ELSE "خالص"   END  ) AS IsPaid  from [dbo].[Driver_delivery_shipping] 
+,c.BName as BranchID  ,d.BName as Delivery_placeID  ,a.Code_delivery    from ( 
+select c.ISID ,c.InsertDate ,c.RecievedName , c.RPhone1 ,c.DeliveredStatus ,c. Delivery_InsertDate ,c.qt ,a.ID_Delivery  
+,CONVERT (NVARCHAR ,  CASE WHEN C.IsPaid ="False"  THEN "غير خالص"  ELSE "خالص"   END  ) AS IsPaid 
+from [dbo].[Driver_delivery_shipping] 
 as a inner join [dbo].[Driver_delivery_shipping_Details] 
 as b on a.Code_delivery = b.Code_delivery
 inner join [dbo].[internalshippingTb] as c on b.ISID COLLATE Arabic_CI_AS= c.ISID 
@@ -72,7 +74,7 @@ inner join DeliveryStatusTb AS B ON X.DeliveredStatus = B.ID
 inner join CoBranchTb as c on a.BranchID= c.ID 
 inner join CoBranchTb as d on a.Delivery_placeID= d.ID 
 
-WHERE A.Code_delivery = '.$code );
+WHERE A.Code_delivery = '.$code);
 
        return response()->json([  'amanat' =>   $results  ], 200);
 
