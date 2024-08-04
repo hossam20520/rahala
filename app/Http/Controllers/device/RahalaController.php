@@ -74,7 +74,7 @@ inner join DeliveryStatusTb AS B ON X.DeliveredStatus = B.ID
 inner join CoBranchTb as c on a.BranchID= c.ID 
 inner join CoBranchTb as d on a.Delivery_placeID= d.ID 
 
-WHERE A.Code_delivery = '.$code);
+WHERE A.Code_delivery = "102-1" ' );
 
        return response()->json([  'amanat' =>   $results  ], 200);
 
