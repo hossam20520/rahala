@@ -160,6 +160,70 @@ where x.DriverID= ? and x.DeliveredStatus= 2 or x.DeliveredStatus = 15  ", [$use
     // getOutAmanat
     
 
+
+    
+
+       
+
+
+
+
+ public function getDetailsHeader(Request $request , $iiscode){
+   
+
+   $user = Auth::user();
+  
+    $results = DB::select("
+      select * from ( 
+      select a.SenderName  COLLATE Arabic_CI_AS as  SenderName  , a.SPhone1  COLLATE Arabic_CI_AS as SPhone1   , a.SPhone2  COLLATE Arabic_CI_AS as 
+      SPhone2 , a.RecievedName , a.RPhone1 , a.RPhone2 ,
+      a.InsertDate ,a.Qt ,a.TotalPrice ,a.TaxiValue ,a.BounsValue ,a.DiscountValue ,a.OverallTotal  ,a.ISID , 
+      c.BName ,  c.BName as DeliveryPlaceID
+      from internalshippingTb as a 
+      inner join CoBranchTb as b  on a.BranchID = b.ID
+      inner join CoBranchTb as c  on a.DeliveryPlaceID = c.ID
+      union 
+      select b.AccName , b.LogPhone1 , b.LogPhone2 , a.RecievedName , a.RPhone1 , a.RPhone2 ,
+      a.InsertDate ,a.Qt ,a.TotalPrice ,a.TaxiValue ,a.BounsValue ,a.DiscountValue ,a.OverallTotal  ,a.ISID 
+      ,d.BName ,  e.BName as DeliveryPlaceID
+      from ShippingFollwoingTb as a 
+      inner join CUSTEMPACCOUNTTB as b on a.CodeID = b.ID
+      inner join CoBranchTb as d  on a.BranchID = d.ID
+      inner join CoBranchTb as e  on a.DeliveryPlaceID = e.ID
+       ) as x 
+       where x.ISID= ?
+  ", [$iiscode]);
+
+
+
+
+  $items = DB::select("
+ select * from ( 
+select b.CatDeName ,a.Price , a.Quantity ,a.TotalPrice  ,c.ISID
+from internalshippingDetails as  a inner join  category  as b on a.CategoryID = b.ID 
+inner join internalshippingTb as c on a.Sh_followingID = c.ID
+union 
+select b.CatDeName ,a.Price , a.Quantity ,a.TotalPrice  ,c.ISID
+from FollowingDetails as  a inner join  category  as b on a.CategoryID = b.ID 
+inner join ShippingFollwoingTb as c on a.Sh_followingID = c.ID 
+) as x 
+where x.ISID  = ?
+", [$iiscode]);
+
+       
+              return response()->json([ 
+                
+                'header' =>   $results ,
+                'items' => $items
+            
+            ], 200);
+  
+              
+  
+      }
+
+
+
     public function getAmanaDetail(Request $request){
    
 

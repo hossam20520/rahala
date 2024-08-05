@@ -67,6 +67,10 @@ Route::get("device/amana/driver/detail/{code}", "device\RahalaController@getAman
 
 Route::get("device/amanats/out/driver", "device\RahalaController@getOutAmanat");
 
+Route::get("device/amanats/out/details/{iiscode}", "device\RahalaController@getDetailsHeader");
+
+
+
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");
 
  Route::get("device/home/", "device\RahalaController@GetHome");
