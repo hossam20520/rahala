@@ -299,7 +299,7 @@ where x.ISID  = ?
 
 
 
-    public function getAmanaDetail(Request $request){
+  public function getAmanaDetail(Request $request){
    
 
       $user = Auth::user();
@@ -338,6 +338,46 @@ where x.ISID  = ?
             
 
     }
+
+
+
+    public function updateStatus(Request $request , $isid , $codeStatus){
+   
+
+ $user = Auth::user();
+
+ 
+ 
+
+ // Update internalshippingTb
+ DB::update("
+     UPDATE internalshippingTb
+     SET Code_status = ?,
+         DeliveredStatus = 14,
+         Customer_DeliveryDate = GETDATE(),
+         Received_Date = GETDATE()
+     WHERE ISID = ?
+ ", [$codeStatus, $isid]);
+
+ // Update ShippingFollwoingTb
+ DB::update("
+     UPDATE ShippingFollwoingTb
+     SET Code_status = ?,
+         DeliveredStatus = 14,
+         Customer_DeliveryDate = GETDATE(),
+         Received_Date = GETDATE()
+     WHERE ISID = ?
+ ", [$codeStatus, $isid]);
+
+ return response()->json(['message' => 'Status updated successfully']);
+
+            
+
+    }
+
+
+
+    
 
 
 

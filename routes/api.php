@@ -70,9 +70,11 @@ Route::get("device/amanats/out/driver", "device\RahalaController@getOutAmanat");
 
 Route::get("device/amanats/out/details/{iiscode}", "device\RahalaController@getDetailsHeader");
 Route::get("device/amanats/out/details/{iiscode}", "device\RahalaController@getDetailsHeader");
-
-
 Route::get("device/amanats/out/status/{isid}/{code}", "device\RahalaController@CheckStatus");
+
+ 
+Route::get("device/amanats/out/status/update/{isid}/{codeStatus}", "device\RahalaController@updateStatus");
+
 
 
 
