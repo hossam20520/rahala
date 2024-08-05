@@ -222,6 +222,48 @@ where x.ISID  = ?
   
       }
 
+      
+     
+
+
+
+     
+ public function CheckStatus(Request $request , $code){
+   
+
+ $user = Auth::user();
+
+ 
+  $results = DB::select("
+    select a.ISID  , case when Recieved_code =@Code   then 1 
+      when Sender_Code =@Code   then 2
+       when Office_code =@Code   then 3  
+     end as Code_status  
+     , A.Recieved_code  , 
+     A.Sender_Code , 
+     A.Office_code
+     from internalshippingTb as   a   
+     UNION 
+     select a.ISID  , case when Recieved_code =@Code   then 1 
+      when Sender_Code =@Code   then 2
+       when Office_code =@Code   then 3
+     end as Code_status  
+     , A.Recieved_code  , 
+     A.Sender_Code , 
+     A.Office_code
+     
+     from ShippingFollwoingTb as   a   
+     )aS X 
+     
+     where ISID = '101-1'   and X. Recieved_code +X.Sender_Code + X.Office_code like '%'+ ? +'%'  
+", [$code]);
+     
+            return response()->json([  'status_code' =>   $results  ], 200);
+
+            
+
+    }
+
 
 
     public function getAmanaDetail(Request $request){

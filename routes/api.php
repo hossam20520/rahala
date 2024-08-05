@@ -65,9 +65,14 @@ Route::get("device/amanat/driver/{code}", "device\RahalaController@GetAmanat");
 Route::get("device/amana/driver/detail/{code}", "device\RahalaController@getAmanaDetail");
 
 
+// Start here
 Route::get("device/amanats/out/driver", "device\RahalaController@getOutAmanat");
 
 Route::get("device/amanats/out/details/{iiscode}", "device\RahalaController@getDetailsHeader");
+Route::get("device/amanats/out/details/{iiscode}", "device\RahalaController@getDetailsHeader");
+
+
+Route::get("device/amanats/out/status/{code}", "device\RahalaController@CheckStatus");
 
 
 
