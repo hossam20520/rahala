@@ -235,34 +235,37 @@ where x.ISID  = ?
  
       // $code = $request->input('code'); // Get code from request
       // $isid = '101-1'; // Define your ISID value
+      $query = "
+      SELECT a.ISID,
+          CASE
+              WHEN Recieved_code = ? THEN 1
+              WHEN Sender_Code = ? THEN 2
+              WHEN Office_code = ? THEN 3
+          END AS Code_status,
+          a.Recieved_code,
+          a.Sender_Code,
+          a.Office_code
+      FROM internalshippingTb AS a
+      UNION
+      SELECT a.ISID,
+          CASE
+              WHEN Recieved_code = ? THEN 1
+              WHEN Sender_Code = ? THEN 2
+              WHEN Office_code = ? THEN 3
+          END AS Code_status,
+          a.Recieved_code,
+          a.Sender_Code,
+          a.Office_code
+      FROM ShippingFollwoingTb AS a
+      WHERE ISID = ?
+          AND CONCAT(a.Recieved_code, a.Sender_Code, a.Office_code) LIKE ?
+  ";
 
-    $result = DB::select("
-        SELECT a.ISID,
-            CASE
-                WHEN Recieved_code = ? THEN 1
-                WHEN Sender_Code = ? THEN 2
-                WHEN Office_code = ? THEN 3
-            END AS Code_status,
-            a.Recieved_code,
-            a.Sender_Code,
-            a.Office_code
-        FROM internalshippingTb AS a
-        UNION
-        SELECT a.ISID,
-            CASE
-                WHEN Recieved_code = ? THEN 1
-                WHEN Sender_Code = ? THEN 2
-                WHEN Office_code = ? THEN 3
-            END AS Code_status,
-            a.Recieved_code,
-            a.Sender_Code,
-            a.Office_code
-        FROM ShippingFollwoingTb AS a
-    ) AS X
-    WHERE ISID = ?
-        AND CONCAT(X.Recieved_code, X.Sender_Code, X.Office_code) LIKE ?
-    ", [$code, $code, $code, $code, '%' . '102' . '%']);
- 
+  $results = DB::select($query, [
+      $code, $code, $code, 
+      $code, $code, $code, 
+      $isid, '%' . $code . '%'
+  ]);
  
 //   $results = DB::select("
 //     select a.ISID  , case when Recieved_code =@Code   then 1 
@@ -289,7 +292,7 @@ where x.ISID  = ?
 // ", [$code]);
      
 
-            return response()->json([  'status_code' =>   $result  ], 200);
+            return response()->json([  'status_code' =>   $results  ], 200);
        
 
     }
