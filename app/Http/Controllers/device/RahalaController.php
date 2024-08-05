@@ -115,7 +115,7 @@ from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.Bran
 
 
 
-    public function getOutAmanat(Request $request ){
+ public function getOutAmanat(Request $request ){
 
       $user = Auth::user();
      
@@ -146,7 +146,8 @@ inner join CoBranchTb as d on a.DeliveryPlaceID = d.ID
 inner join CUSTEMPACCOUNTTB as f on a.CodeID = f.ID
 inner join DeliveryStatusTb  as e on a.DeliveredStatus	 = e.ID
 where d.TypeBracnh = 1 and a.IsActive= 1 
-) as x where x.DriverID= ? ", [$user->account_ID]);
+)as x 
+where x.DriverID= ? and x.DeliveredStatus= 2 or x.DeliveredStatus = 15  ", [$user->account_ID]);
      
   return response()->json([  'out_amanats' =>   $results  ], 200);
      
