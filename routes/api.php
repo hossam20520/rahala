@@ -72,7 +72,7 @@ Route::get("device/amanats/out/details/{iiscode}", "device\RahalaController@getD
 Route::get("device/amanats/out/details/{iiscode}", "device\RahalaController@getDetailsHeader");
 
 
-Route::get("device/amanats/out/status/{code}", "device\RahalaController@CheckStatus");
+Route::get("device/amanats/out/status/{isid}/{code}", "device\RahalaController@CheckStatus");
 
 
 

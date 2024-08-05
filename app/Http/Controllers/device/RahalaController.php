@@ -228,39 +228,69 @@ where x.ISID  = ?
 
 
      
- public function CheckStatus(Request $request , $code){
+ public function CheckStatus(Request $request , $isid , $code ){
    
 
- $user = Auth::user();
-
+      $user = Auth::user();
  
-  $results = DB::select("
-    select a.ISID  , case when Recieved_code =@Code   then 1 
-      when Sender_Code =@Code   then 2
-       when Office_code =@Code   then 3  
-     end as Code_status  
-     , A.Recieved_code  , 
-     A.Sender_Code , 
-     A.Office_code
-     from internalshippingTb as   a   
-     UNION 
-     select a.ISID  , case when Recieved_code =@Code   then 1 
-      when Sender_Code =@Code   then 2
-       when Office_code =@Code   then 3
-     end as Code_status  
-     , A.Recieved_code  , 
-     A.Sender_Code , 
-     A.Office_code
-     
-     from ShippingFollwoingTb as   a   
-     )aS X 
-     
-     where ISID = '101-1'   and X. Recieved_code +X.Sender_Code + X.Office_code like '%'+ ? +'%'  
-", [$code]);
-     
-            return response()->json([  'status_code' =>   $results  ], 200);
+      // $code = $request->input('code'); // Get code from request
+      // $isid = '101-1'; // Define your ISID value
 
-            
+    $result = DB::select("
+        SELECT a.ISID,
+            CASE
+                WHEN Recieved_code = ? THEN 1
+                WHEN Sender_Code = ? THEN 2
+                WHEN Office_code = ? THEN 3
+            END AS Code_status,
+            a.Recieved_code,
+            a.Sender_Code,
+            a.Office_code
+        FROM internalshippingTb AS a
+        UNION
+        SELECT a.ISID,
+            CASE
+                WHEN Recieved_code = ? THEN 1
+                WHEN Sender_Code = ? THEN 2
+                WHEN Office_code = ? THEN 3
+            END AS Code_status,
+            a.Recieved_code,
+            a.Sender_Code,
+            a.Office_code
+        FROM ShippingFollwoingTb AS a
+    ) AS X
+    WHERE ISID = ?
+        AND CONCAT(X.Recieved_code, X.Sender_Code, X.Office_code) LIKE ?
+    ", [$code, $code, $code, $code, '%' . '102' . '%']);
+ 
+ 
+//   $results = DB::select("
+//     select a.ISID  , case when Recieved_code =@Code   then 1 
+//       when Sender_Code =@Code   then 2
+//        when Office_code =@Code   then 3  
+//      end as Code_status  
+//      , A.Recieved_code  , 
+//      A.Sender_Code , 
+//      A.Office_code
+//      from internalshippingTb as   a   
+//      UNION 
+//      select a.ISID  , case when Recieved_code =@Code   then 1 
+//       when Sender_Code =@Code   then 2
+//        when Office_code =@Code   then 3
+//      end as Code_status  
+//      , A.Recieved_code  , 
+//      A.Sender_Code , 
+//      A.Office_code
+     
+//      from ShippingFollwoingTb as   a   
+//      )aS X 
+     
+//      where ISID = '101-1'   and X. Recieved_code +X.Sender_Code + X.Office_code like '%'+'102'+'%'  
+// ", [$code]);
+     
+
+            return response()->json([  'status_code' =>   $result  ], 200);
+       
 
     }
 
