@@ -109,9 +109,98 @@ from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.Bran
     }
 
 
+
+
+
+
+
+
+    public function getOutAmanat(Request $request ){
+
+      $user = Auth::user();
+     
+      
+ $results = DB::select("select * from ( 
+
+select a.ISID , a.SenderName COLLATE Arabic_CI_AS as SenderName  
+
+, a.SPhone1  COLLATE Arabic_CI_AS as SPhone1  , a.SPhone2   COLLATE Arabic_CI_AS as SPhone2  , a.RecievedName , a.RPhone1 , a.RPhone2
+, b.InsertDate as delivery_InsertDate ,a.TotalPrice , a.BounsValue ,a.OverallTotal ,a.DiscountValue   ,
+a.AddressDescription ,c.BName ,d.BName as DeliveryPlaceID ,a.Qt ,case when a.IsPaid = 0  then 'غير خالص' else 'خالص' end  as IsPaid
+,b.DriverID  ,e.DName , a.DeliveredStatus
+from  internalshippingTb as a 
+inner join Driver_delivery_shipping as b on b.ID_Delivery =  a.ID_Delivery 
+inner join CoBranchTb as c on a.BranchID = c.ID 
+inner join CoBranchTb as d on a.DeliveryPlaceID = d.ID 
+inner join DeliveryStatusTb  as e on a.DeliveredStatus	 = e.ID
+where d.TypeBracnh = 1 and a.IsActive= 1 
+union 
+select a.ISID , f.AccName , f.LogPhone1 , f.LogPhone2 , a.RecievedName , a.RPhone1 , a.RPhone2
+, b.InsertDate as delivery_InsertDate ,a.TotalPrice , a.BounsValue ,a.OverallTotal ,a.DiscountValue   ,
+a.AddressDescription ,c.BName ,d.BName ,a.Qt,case when a.IsPaid = 0  then 'غير خالص' else 'خالص' end  as IsPaid
+,b.DriverID,e.DName , a.DeliveredStatus
+from  ShippingFollwoingTb as a 
+inner join Driver_delivery_shipping as b on b.ID_Delivery =  a.ID_Delivery 
+inner join CoBranchTb as c on a.BranchID = c.ID 
+inner join CoBranchTb as d on a.DeliveryPlaceID = d.ID 
+inner join CUSTEMPACCOUNTTB as f on a.CodeID = f.ID
+inner join DeliveryStatusTb  as e on a.DeliveredStatus	 = e.ID
+where d.TypeBracnh = 1 and a.IsActive= 1 
+) as x where x.DriverID= ? ", [$user->account_ID]);
+     
+  return response()->json([  'out_amanats' =>   $results  ], 200);
+     
+         }
+
+
+
+
+
+    // getOutAmanat
     
 
-    
+    public function getAmanaDetail(Request $request){
+   
+
+      $user = Auth::user();
+
+ 
+  $results = DB::select("
+    select 
+    * from ( 
+
+    SELECT A.ISID , A.InsertDate   , A.SenderName COLLATE Arabic_CI_AS  as SenderName 
+    , A.SPhone1  COLLATE Arabic_CI_AS as SPhone1  ,A.SPhone2 COLLATE Arabic_CI_AS as SPhone2   ,A.RecievedName , A.RPhone1 , A.RPhone2 , A.Qt , A.TotalPrice ,A.TaxiValue 
+    ,C.CatDeName , B.Quantity ,B.Price , B.TotalPrice  as TotalPriceDetails ,D.BName AS BranchID , E.BName AS DeliveryPlaceID ,A.Delivery_InsertDate  ,F.DName ,A.DiscountValue 
+    FROM [dbo].[internalshippingTb] AS A INNER JOIN [dbo].[internalshippingDetails] AS B ON A.ID = B.Sh_followingID
+    INNER JOIN category  AS C ON B.CategoryID =C.ID 
+    INNER JOIN CoBranchTb AS D ON A.BranchID = D.ID
+    INNER JOIN CoBranchTb AS E ON A.DeliveryPlaceID = E.ID
+    INNER JOIN DeliveryStatusTb AS F ON A.DeliveredStatus = F.ID
+    where a.IsActive= 1 
+    UNION 
+
+    SELECT A.ISID , A.InsertDate , G.AccName , G.LogPhone1 ,G.LogPhone2 ,A.RecievedName , A.RPhone1 , A.RPhone2 , A.Qt , A.TotalPrice ,A.TaxiValue 
+    ,C.CatDeName , B.Quantity ,B.Price , B.TotalPrice as TotalPriceDetails ,D.BName AS BranchID , E.BName AS DeliveryPlaceID ,A.Delivery_InsertDate  ,F.DName ,A.DiscountValue 
+    FROM [dbo].ShippingFollwoingTb AS A INNER JOIN [dbo].FollowingDetails AS B ON A.ID = B.Sh_followingID
+    INNER JOIN category  AS C ON B.CategoryID =C.ID 
+    INNER JOIN CoBranchTb AS D ON A.BranchID = D.ID
+    INNER JOIN CoBranchTb AS E ON A.DeliveryPlaceID = E.ID
+    INNER JOIN DeliveryStatusTb AS F ON A.DeliveredStatus = F.ID
+    INNER JOIN [dbo].[CUSTEMPACCOUNTTB] AS G ON A.CodeID = G.ID 
+    where a.IsActive= 1 
+    ) as x 
+    where x.ISID= ?
+", [$code]);
+     
+            return response()->json([  'amana' =>   $results  ], 200);
+
+            
+
+    }
+
+
+
     public function getPackagesDriver(Request $request){
 
       $user = Auth::user();

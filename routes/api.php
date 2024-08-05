@@ -62,7 +62,10 @@ Route::get("device/drivers/", "device\RahalaController@getPackagesDriver");
 Route::get("device/bills/driver/", "device\RahalaController@GetBills");
 
 Route::get("device/amanat/driver/{code}", "device\RahalaController@GetAmanat");
-    
+Route::get("device/amana/driver/detail/{code}", "device\RahalaController@getAmanaDetail");
+
+
+Route::get("device/amanats/out/driver", "device\RahalaController@getOutAmanat");
 
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");
 
