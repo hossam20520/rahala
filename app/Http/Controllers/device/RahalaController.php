@@ -341,33 +341,31 @@ where x.ISID  = ?
 
 
 
-    public function updateStatus(Request $request , $isid , $codeStatus){
+    public function updateStatus(Request $request , $isid , $codeStatus  , $status ){
    
-
+      // $status == 14
+      // $status == 15
  $user = Auth::user();
-
  
- 
-
  // Update internalshippingTb
  DB::update("
      UPDATE internalshippingTb
      SET Code_status = ?,
-         DeliveredStatus = 14,
+         DeliveredStatus = ?,
          Customer_DeliveryDate = GETDATE(),
          Received_Date = GETDATE()
      WHERE ISID = ?
- ", [$codeStatus, $isid]);
+ ", [$codeStatus,  $status , $isid]);
 
  // Update ShippingFollwoingTb
  DB::update("
      UPDATE ShippingFollwoingTb
      SET Code_status = ?,
-         DeliveredStatus = 14,
+         DeliveredStatus = ?,
          Customer_DeliveryDate = GETDATE(),
          Received_Date = GETDATE()
      WHERE ISID = ?
- ", [$codeStatus, $isid]);
+ ", [$codeStatus,   $status , $isid]);
 
  return response()->json(['message' => 'Status updated successfully']);
 
