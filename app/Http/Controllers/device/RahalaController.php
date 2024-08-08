@@ -344,7 +344,48 @@ where x.ISID  = ?
 
 
 
-    public function getMovsList(Request $request , $type){
+
+
+ public function GetAmanaEnterDelvery(Request $request){
+   
+
+  $user = Auth::user();
+
+ 
+  $results = DB::select("
+    select * from ( 
+select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
+,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription,B.DriverID
+,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
+From internalshippingTb as a 
+inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
+INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
+INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
+where a.DeliveredStatus= 5 and a.IsActive =1 
+UNION 
+select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
+,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription ,B.DriverID
+,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
+From internalshippingTb as a 
+inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
+INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
+INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
+where a.DeliveredStatus= 5 and a.IsActive =1 
+) as x 
+where x.DriverID =  ?
+", [4]);
+// $user->account_ID
+            return response()->json([  'amanaenterdelv' =>   $results  ], 200);
+
+            
+
+    }
+
+
+
+
+
+  public function getMovsList(Request $request , $type){
    
 
   $user = Auth::user();

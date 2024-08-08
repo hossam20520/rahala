@@ -78,6 +78,10 @@ Route::get("device/amanats/out/status/update/{isid}/{codeStatus}/{status}", "dev
 Route::get("device/amanats/moves/list/{type}", "device\RahalaController@getMovsList");
 
 
+Route::get("device/amanats/enter/delvery", "device\RahalaController@GetAmanaEnterDelvery");
+
+
+
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");
 
  Route::get("device/home/", "device\RahalaController@GetHome");
