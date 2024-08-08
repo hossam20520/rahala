@@ -341,7 +341,197 @@ where x.ISID  = ?
 
 
 
-    public function updateStatus(Request $request , $isid , $codeStatus  , $status ){
+
+
+
+    public function getMovsList(Request $request , $type){
+   
+
+  $user = Auth::user();
+
+ if($type == "1"){
+
+
+  $results = DB::select("
+select * from ( 
+
+select a.ISID , a.SenderName  COLLATE Arabic_CI_AS as SenderName 
+
+, a.SPhone1 COLLATE Arabic_CI_AS as SPhone1
+,a.SPhone2  COLLATE Arabic_CI_AS  as SPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from internalshippingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
+where a.IsActive =1 and f.Type_delivery = 1  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  ) and d.TypeBracnh = 0 
+union 
+select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from ShippingFollwoingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
+inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
+where a.IsActive =1 and f.Type_delivery = 1 and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  )and d.TypeBracnh = 0 
+) as x 
+where x.DriverID = ? ", [$user->account_ID]);
+
+}else if($type == "2"){
+
+  $results = DB::select("
+select * from ( 
+
+select a.ISID , a.SenderName  COLLATE Arabic_CI_AS as SenderName 
+
+, a.SPhone1 COLLATE Arabic_CI_AS as SPhone1
+,a.SPhone2  COLLATE Arabic_CI_AS  as SPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from internalshippingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
+where a.IsActive =1 and f.Type_delivery = 1  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  ) and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 14 or a.DeliveredStatus= 3 )
+union 
+select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from ShippingFollwoingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
+inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
+where a.IsActive =1 and f.Type_delivery = 1 and (  Type_delivery_staues = 1  )and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 14 or a.DeliveredStatus= 3 )
+) as x 
+where x.DriverID = ? ", [$user->account_ID]);
+
+
+}else if($type == "3"){
+  $results = DB::select("
+select * from ( 
+
+select a.ISID , a.SenderName  COLLATE Arabic_CI_AS as SenderName 
+
+, a.SPhone1 COLLATE Arabic_CI_AS as SPhone1
+,a.SPhone2  COLLATE Arabic_CI_AS  as SPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from internalshippingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
+where a.IsActive =1 and f.Type_delivery = 1  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  )  and  ( a.DeliveredStatus = 15 or a.DeliveredStatus=8     or a.DeliveredStatus= 9  )
+union 
+select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from ShippingFollwoingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
+inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
+where a.IsActive =1 and f.Type_delivery = 1 and (  Type_delivery_staues = 1  )and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 15 or a.DeliveredStatus=8     or a.DeliveredStatus= 9  )
+) as x 
+where x.DriverID =  ? ", [$user->account_ID]);
+}else if($type == "4"){
+
+  $results = DB::select("
+  a.DeliveredStatus= 3 select * from ( 
+
+select a.ISID , a.SenderName  COLLATE Arabic_CI_AS as SenderName 
+
+, a.SPhone1 COLLATE Arabic_CI_AS as SPhone1
+,a.SPhone2  COLLATE Arabic_CI_AS  as SPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from internalshippingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on f.ID_Delivery =a.ID_Delivery_Taxi
+where a.IsActive =1 and f.Type_delivery = 3 and e.Type_delivery_staues= 3  and a.DeliveredStatus= 3 
+union 
+select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from ShippingFollwoingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on f.ID_Delivery = a.ID_Delivery_Taxi
+inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
+where a.IsActive =1 and f.Type_delivery = 3 and d.TypeBracnh = 1  and e.Type_delivery_staues= 3 and  a.DeliveredStatus= 3 
+) as x 
+where x.DriverID = ? ", [$user->account_ID]);
+}else if($type == "5"){
+  $results = DB::select("select * from ( 
+
+select a.ISID , a.SenderName  COLLATE Arabic_CI_AS as SenderName 
+
+, a.SPhone1 COLLATE Arabic_CI_AS as SPhone1
+,a.SPhone2  COLLATE Arabic_CI_AS  as SPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from internalshippingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on f.ID_Delivery =a.ID_Delivery_Taxi
+where a.IsActive =1 and f.Type_delivery = 3 and e.Type_delivery_staues= 4
+union 
+select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
+,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
+a.Customer_DeliveryDate ,DiscountValue ,Received_Date ,TaxiValue ,b.DName ,c.BName as BranchID  , F.DriverID
+,d.BName as DeliveryPlaceID  ,A.OverallTotal ,a.Driver_value ,case when a.IsPaid= 0   then 'غير خالص' else 'خالص' end as IsPaid 
+from ShippingFollwoingTb as a 
+inner join DeliveryStatusTb as b on a.DeliveredStatus =b.ID 
+inner join CoBranchTb as c on a.BranchID = c.ID
+inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
+inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
+inner join Driver_delivery_shipping as f on f.ID_Delivery = a.ID_Delivery_Taxi
+inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
+where a.IsActive =1 and f.Type_delivery = 3 and d.TypeBracnh = 1  and e.Type_delivery_staues= 4 
+) as x 
+where x.DriverID = ? 
+", [$user->account_ID]);
+}
+     
+            return response()->json([  'amanaListMovs' =>   $results  ], 200);
+
+            
+
+    }
+
+
+
+ public function updateStatus(Request $request , $isid , $codeStatus  , $status ){
    
       // $status == 14
       // $status == 15
@@ -373,11 +563,7 @@ where x.ISID  = ?
 
     }
 
-
-
-    
-
-
+ 
 
     public function getPackagesDriver(Request $request){
 

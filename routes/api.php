@@ -75,7 +75,7 @@ Route::get("device/amanats/out/status/{isid}/{code}", "device\RahalaController@C
  
 Route::get("device/amanats/out/status/update/{isid}/{codeStatus}/{status}", "device\RahalaController@updateStatus");
 
-
+Route::get("device/amanats/moves/list/{type}", "device\RahalaController@getMovsList");
 
 
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");
