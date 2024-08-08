@@ -457,7 +457,7 @@ where x.DriverID =  ? ", [$user->account_ID]);
 }else if($type == "4"){
 
   $results = DB::select("
-  a.DeliveredStatus= 3 select * from ( 
+ select * from ( 
 
 select a.ISID , a.SenderName  COLLATE Arabic_CI_AS as SenderName 
 
