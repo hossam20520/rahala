@@ -79,7 +79,7 @@ Route::get("device/amanats/moves/list/{type}", "device\RahalaController@getMovsL
 
 
 Route::get("device/amanats/enter/delvery", "device\RahalaController@GetAmanaEnterDelvery");
-
+Route::get("device/amanats/enter/delvery/{iiscode}", "device\RahalaController@getEnterDeleviery");
 
 
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");

@@ -222,6 +222,75 @@ where x.ISID  = ?
   
       }
 
+
+
+
+
+
+
+
+
+      public function getEnterDeleviery(Request $request , $iiscode){
+   
+
+        $user = Auth::user();
+       
+         $results = DB::select("
+           select * from ( 
+select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
+,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription,B.DriverID
+,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
+From internalshippingTb as a 
+inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
+INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
+INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
+where a.DeliveredStatus= 5 and a.IsActive =1 
+UNION 
+select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
+,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription ,B.DriverID
+,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
+From internalshippingTb as a 
+inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
+INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
+INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
+where a.DeliveredStatus= 5 and a.IsActive =1 
+) as x 
+where x.DriverID =  ?
+       ", [ 4 ]);
+     
+      //  $user->account_ID
+     
+     
+ $items = DB::select("
+     select * from (
+select a.Quantity ,a.Price ,a.TotalPrice ,c.ISID,b.CatDeName
+from internalshippingDetails as a
+inner join category as b on a.CategoryID = b.ID 
+inner join internalshippingTb as c on a.Sh_followingID= c.ID
+union 
+select a.Quantity ,a.Price ,a.TotalPrice ,c.ISID,b.CatDeName
+from FollowingDetails as a
+inner join category as b on a.CategoryID = b.ID 
+inner join ShippingFollwoingTb as c on a.Sh_followingID= c.ID
+) as x 
+where x.ISID  = ?
+     ", [$iiscode]);
+     
+            
+                   return response()->json([ 
+                     
+                     'header' =>   $results ,
+                     'items' => $items
+                 
+                 ], 200);
+       
+                   
+       
+           }
+
+
+
+
       
      
 
