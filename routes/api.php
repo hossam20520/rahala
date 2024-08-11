@@ -22,6 +22,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get("device/about", "device\AuthController@getInfoAbout");
 
+// (أ) إمكانية تتبيع الأمانة للزبون العاد بواسطة الكود ومعرفة حالة الأمانة
+Route::get("device/amanats/trac/{isid}/{code}", "device\RahalaController@TracAmana");
+
 
 //--------------------------- Reset Password  ---------------------------
 
@@ -80,6 +83,11 @@ Route::get("device/amanats/moves/list/{type}", "device\RahalaController@getMovsL
 
 Route::get("device/amanats/enter/delvery", "device\RahalaController@GetAmanaEnterDelvery");
 Route::get("device/amanats/enter/delvery/{iiscode}", "device\RahalaController@getEnterDeleviery");
+
+
+
+
+
 
 
  Route::post("device/sendMoney/", "device\AuthController@sendMoney");

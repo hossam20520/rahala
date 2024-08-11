@@ -236,27 +236,25 @@ where x.ISID  = ?
         $user = Auth::user();
        
          $results = DB::select("
-           select * from ( 
+         select * from ( 
 select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
 ,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription,B.DriverID
-,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
+,a.BounsValue,a.Latitude ,a.longitude ,a.MapLink
 From internalshippingTb as a 
 inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
 INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
 INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
-where a.DeliveredStatus= 5 and a.IsActive =1 
 UNION 
 select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
 ,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription ,B.DriverID
-,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
+,a.BounsValue,a.Latitude ,a.longitude ,a.MapLink
 From internalshippingTb as a 
 inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
 INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
 INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
-where a.DeliveredStatus= 5 and a.IsActive =1 
+
 ) as x 
-where x.DriverID =  ?
-       ", [ 4 ]);
+where x.ISID = ?", [$iiscode ]);
      
       //  $user->account_ID
      
@@ -409,6 +407,69 @@ where x.ISID  = ?
     }
 
 
+
+
+
+
+
+// (أ) إمكانية تتبيع الأمانة للزبون العاد بواسطة الكود ومعرفة حالة الأمانة
+
+ public function TracAmana(Request $request , $isid , $code){
+ 
+  $results = DB::select("
+  select * from ( 
+      select  a.SenderName COLLATE Arabic_CI_AS as SenderName, 
+              a.SPhone1  COLLATE Arabic_CI_AS as SPhone1, 
+              a.SPhone2  COLLATE Arabic_CI_AS as SPhone2, 
+              a.RecievedName, 
+              a.RPhone1, 
+              a.RPhone2, 
+              b.DName, 
+              case when a.IsPaid = 0 then 'خالص' else 'غير خالص' end as IsPaid, 
+              a.InsertDate, 
+              a.Delivery_InsertDate, 
+              a.Received_Date, 
+              a.OverallTotal, 
+              a.TaxiValue, 
+              a.qt, 
+              a.ISID, 
+              a.Recieved_code, 
+              a.Sender_Code 
+      from internalshippingTb as a 
+      inner join DeliveryStatusTb as b on a.DeliveredStatus = b.ID 
+
+      union 
+
+      select c.AccName, 
+             c.LogPhone1, 
+             c.LogPhone2, 
+             a.RecievedName, 
+             a.RPhone1, 
+             a.RPhone2, 
+             b.DName, 
+             case when a.IsPaid = 0 then 'خالص' else 'غير خالص' end as IsPaid, 
+             a.InsertDate, 
+             a.Delivery_InsertDate, 
+             a.Received_Date, 
+             a.OverallTotal, 
+             a.TaxiValue, 
+             a.qt, 
+             a.ISID, 
+             a.Recieved_code, 
+             a.Sender_Code 
+      from ShippingFollwoingTb as a 
+      inner join DeliveryStatusTb as b on a.DeliveredStatus = b.ID 
+      inner join CUSTEMPACCOUNTTB as c on a.CodeID = c.ID 
+  ) as x 
+  where x.ISID = ? 
+  and x.Recieved_code + x.Sender_Code like ?
+", [$isid, '%' . $code . '%']);
+     
+            return response()->json([  'amana' =>   $results  ], 200);
+
+            
+
+    }
 
 
 
