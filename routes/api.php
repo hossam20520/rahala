@@ -56,6 +56,10 @@ Route::get("device/currencies/", "device\RahalaController@getCurrenices");
 
 Route::get("device/sendmoney/detail/", "device\RahalaController@GetDetailsSendMoney");
 
+Route::get("device/history/detail/{phone}/{from}/{to}", "device\RahalaController@historyCustomer");
+
+
+
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
 

@@ -218,13 +218,11 @@ class MoviesController extends Controller
         $comment->media_id = $request['id'];
         $comment->date =  $formattedDate;
         $comment->save();
-
-
+ 
       return response()->json( $comment ,
      
              );
-         
-
+ 
     }
 
     public function Addfavourite(Request $request  ){ 
@@ -245,9 +243,7 @@ class MoviesController extends Controller
         return response()->json($fav);
        }
       
-
-      
-
+ 
         return response()->json($favourit);
      }
 
@@ -843,8 +839,6 @@ public function SeeAll(Request $request){
                 'top'=>  $this->getVideos("top" , "MOVIES" , 10),
                 'movies' => $this->getVideos("normal" , "MOVIES" , 10),
                 'random' => $this->getVideos("RANDOM" , "MOVIES" , 10),
-
-              
             ],
 
              'series' => [

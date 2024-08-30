@@ -475,6 +475,37 @@ where x.ISID  = ?
 
 
 
+// (أ)  كشف يظهر التعاملات مع الشركة للزبون العادي
+
+ public function historyCustomer(Request $request , $phone , $from , $to ){
+ 
+      $results = DB::select("
+   select * from ( 
+
+select  a.SenderName COLLATE Arabic_CI_AS as SenderName  
+, a.SPhone1  COLLATE Arabic_CI_AS as SPhone1  , a.SPhone2  
+COLLATE Arabic_CI_AS as SPhone2  ,a.RecievedName 
+,a.RPhone1 ,a.RPhone2 ,b.DName , case when a.IsPaid  
+ = 0  then 'خالص'  else 'غير خالص' 
+end as IsPaid ,a.InsertDate ,a.Delivery_InsertDate ,a.Received_Date ,a.OverallTotal ,a.TaxiValue ,a.qt ,a.ISID ,a.Recieved_code	 ,a.Sender_Code 
+from internalshippingTb as a inner join
+ DeliveryStatusTb as b on a.DeliveredStatus = b.ID 
+union 
+select c.AccName  , c.LogPhone1 ,c.LogPhone2 ,a.RecievedName ,a.RPhone1 ,a.RPhone2 ,b.DName , case when a.IsPaid   = 0  then 'خالص'  else 'غير خالص' 
+end as IsPaid ,a.InsertDate ,a.Delivery_InsertDate ,a.Received_Date ,a.OverallTotal ,a.TaxiValue ,a.qt ,a.ISID ,a.Recieved_code	 ,a.Sender_Code 
+
+from ShippingFollwoingTb as a inner join DeliveryStatusTb as b on a.DeliveredStatus = b.ID
+inner join CUSTEMPACCOUNTTB as  c on a.CodeID = c.ID 
+) as x 
+where   x.SPhone1  + x.SPhone2	+ X.RPhone2 +X.RPhone2  like '%'+ ? +'%'  AND X.InsertDate  BETWEEN  ?  AND  ?
+    ", [$phone,   $from , $to  ]);
+         
+                return response()->json([  'history' =>   $results  ], 200);
+    
+                
+    
+        }
+
 
  public function GetAmanaEnterDelvery(Request $request){
    
