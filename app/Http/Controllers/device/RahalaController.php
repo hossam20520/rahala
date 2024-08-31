@@ -507,6 +507,102 @@ where   x.SPhone1  + x.SPhone2	+ X.RPhone2 +X.RPhone2  like '%'+ ? +'%'  AND X.I
         }
 
 
+
+
+// جلب الامانة للمعرفة مقيمة او لاء
+ public function checkRatedPackage(Request $request , $isid , $senderCode   ){
+ 
+          $results = DB::select("
+select x.ISID,case when x.Sender_Code =  ?  then CodeID_StauesSTarDorDRiver  
+
+when x.Recieved_code =  ?  then StatuesForStarDriver  
+
+end  as cloim , 
+case when x.Sender_Code = ?  then 1 
+when x.Recieved_code = ?  then 2  
+end Code_status 
+from ( 
+
+SELECT a.ISID  , a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver  
+FROM [dbo].[internalshippingTb] AS a   
+union  
+SELECT a.ISID, a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver   
+FROM [dbo].[internalshippingTb] AS a   
+) as x 
+where x.ISID = ? and x.Recieved_code  + x.Sender_Code   like  '%' + ? +'%'
+        ", [$senderCode,  $senderCode, $senderCode, $senderCode, $isid, $senderCode, ]);
+             
+                    return response()->json([  'check' =>   $results  ], 200);
+        
+                    
+        //cloim / true -- rated / falsa
+            }
+
+
+
+
+//  كود جلب العميل
+public function GetDriver(Request $request , $isid    ){
+ 
+  $results = DB::select("
+ select  a.ID  , A.AccName from [dbo].[CUSTEMPACCOUNTTB] as a inner join 
+driver  as b on 
+a.AccountCode  COLLATE Arabic_CI_AS  = b.Code  COLLATE Arabic_CI_AS 
+INNER JOIN Driver_delivery_shipping  AS C ON  A.ID = C.DriverID 
+INNER JOIN Driver_delivery_shipping_Details AS D ON C.Code_delivery= D.Code_delivery
+WHERE D.ISID =  ?
+", [ $isid   ]);
+     
+            return response()->json([  'driver' =>   $results  ], 200);
+
+            
+//cloim / true -- rated / falsa
+    }
+
+
+
+
+//   تحديث
+public function UpdateRate(Request $request , $isid  , $senderCode   , $rateNumber  , $driver_id){
+ 
+  
+  $updateOne = DB::select("
+update [internalshippingTb] set CodeID_StauesSTarDorDRiver =1 where ISID=  ?  and Sender_Code = ?
+", [ $isid  , $senderCode  ]);
+
+
+
+$updateTow = DB::select("
+update [internalshippingTb] set StatuesForStarDriver = 1 where ISID= ?  and Recieved_code = ?
+", [ $isid  , $senderCode  ]);
+
+
+$updateThree = DB::select("
+update ShippingFollwoingTb set CodeID_StauesSTarDorDRiver =1 where ISID=  ?  and Sender_Code =  ?
+", [ $isid  , $senderCode  ]);
+
+
+$updateFour = DB::select("
+update ShippingFollwoingTb set StatuesForStarDriver =1 where ISID=  ? and Recieved_code  = ?
+", [ $isid  , $senderCode  ]);
+
+
+$updateFive = DB::select("
+update Driver_Rating_Table set Stars_Drivers += 
+  ? , NumberofUsers +=1 , Stars +=5
+where CodeID = ?
+", [ $rateNumber  , $driver_id]);
+ 
+            return response()->json([  'driver' =>    "success"  ], 200);
+
+            
+ 
+    }
+
+
+
+
+
  public function GetAmanaEnterDelvery(Request $request){
    
 

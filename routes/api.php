@@ -60,6 +60,21 @@ Route::get("device/history/detail/{phone}/{from}/{to}", "device\RahalaController
 
 
 
+
+
+//تقييم
+// -1
+// كود جلب الامانة
+Route::get("device/check/amana/{isid}/{senderCode}", "device\RahalaController@checkRatedPackage");
+
+//
+Route::get("device/driver/info/{isid}", "device\RahalaController@GetDriver");
+
+//
+Route::get("device/driver/{isid}/{senderCode}/{rateNumber}/{driver_id}", "device\RahalaController@UpdateRate");
+ 
+
+
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
 
