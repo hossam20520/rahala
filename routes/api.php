@@ -26,6 +26,11 @@ Route::get("device/about", "device\AuthController@getInfoAbout");
 Route::get("device/amanats/trac/{isid}/{code}", "device\RahalaController@TracAmana");
 
 
+
+Route::get("device/amana/status/check/{isid}/{code}", "device\RahalaController@GetAmanaDetailsss");
+
+
+
 //--------------------------- Reset Password  ---------------------------
 
 Route::group([

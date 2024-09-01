@@ -475,6 +475,86 @@ where x.ISID  = ?
 
 
 
+
+
+
+
+
+//  كود التاكد من حاله الامانة لو كانت ب 3 تفتح جمله انسرت لو غير رقم 3 هيقوله  DeliveredStatus
+
+public function GetAmanaDetailsss(Request $request , $isid , $code){
+ 
+  $results = DB::select("
+ select x.DeliveredStatus ,x.ISID ,x.Recieved_code ,b.DName from ( 
+
+select  a.ISID ,a.Recieved_code , a.DeliveredStatus  from internalshippingTb as a  
+
+union 
+select  a.ISID  ,a.Recieved_code ,a.DeliveredStatus   from ShippingFollwoingTb  as a  
+) as x 
+inner join DeliveryStatusTb as b on x.DeliveredStatus =b.ID
+where x.ISID =  ?  and x.DeliveredStatus= 3 and x.Recieved_code =  ?
+", [$isid,   $code  ]);
+     
+  return response()->json([  'status' =>   $results  ], 200);
+
+            
+
+    }
+
+
+
+
+
+ public function InsertDetails(Request $request , $isid , $code , $longitude ,$latitude , $phone , $adress  ){
+ 
+     
+ 
+
+// Start transaction
+DB::beginTransaction();
+
+try {
+    // Insert into TaxiDetails
+    DB::insert("
+        INSERT INTO [dbo].[TaxiDetails]
+               ([ISID], [AddressDescription], [Recieved_code], [longitude], [Latitude], [Phone])
+         VALUES (?, ?, ?, ?, ?, ?)
+    ", [$isid, $adress, $code, $longitude, $latitude, $phone]);
+
+    // Update internalshippingTb
+    DB::update("
+        UPDATE [dbo].[internalshippingTb]
+        SET DeliveredStatus = 18, Latitude = ?, longitude = ?, AddressDescription = ?
+        WHERE ISID = ?
+    ", [$latitude, $longitude, $adress, $isid]);
+
+    // Update ShippingFollwoingTb
+    DB::update("
+        UPDATE [dbo].[ShippingFollwoingTb]
+        SET DeliveredStatus = 18, Latitude = ?, longitude = ?, AddressDescription = ?
+        WHERE ISID = ?
+    ", [$latitude, $longitude, $adress, $isid]);
+
+    // Commit transaction
+    DB::commit();
+} catch (\Exception $e) {
+    // Rollback transaction if something goes wrong
+    DB::rollBack();
+    throw $e;
+}
+
+ 
+         
+  return response()->json([  'status' =>    "Success"  ], 200);
+    
+                
+    
+        }
+
+
+
+
 // (أ)  كشف يظهر التعاملات مع الشركة للزبون العادي
 
  public function historyCustomer(Request $request , $phone , $from , $to ){
@@ -550,10 +630,10 @@ driver  as b on
 a.AccountCode  COLLATE Arabic_CI_AS  = b.Code  COLLATE Arabic_CI_AS 
 INNER JOIN Driver_delivery_shipping  AS C ON  A.ID = C.DriverID 
 INNER JOIN Driver_delivery_shipping_Details AS D ON C.Code_delivery= D.Code_delivery
-WHERE D.ISID =  ?
-", [ $isid   ]);
+WHERE D.ISID = ?
+", [ $isid ]);
      
-            return response()->json([  'driver' =>   $results  ], 200);
+  return response()->json([  'driver' =>   $results  ], 200);
 
             
 //cloim / true -- rated / falsa
