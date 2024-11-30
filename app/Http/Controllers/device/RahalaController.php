@@ -30,6 +30,10 @@ class RahalaController extends Controller
 
     public function getStatmentsAll(Request $request , $from , $to ){
       $user = Auth::user();
+
+      $formattedFrom = Carbon::parse($from)->format('Y-m-d H:i:s'); // Use Carbon for date handling
+      $formattedTo = Carbon::parse($to)->format('Y-m-d H:i:s');
+
       $results = DB::select("
      SELECT a.[ID]
       ,[CodeID]
@@ -53,7 +57,7 @@ inner join CoBranchTb as c on a.BranchID = c.id
 inner join CurrencyMainTb as d on a.CurenncyID = d.ID
 inner join TypeTb as e on a.TypeID =e.ID
 where a.CodeID = ? and a.InsertDate  between 'date from ' and 'date To'
-  ", [$user->account_ID , $from ,   $to  ]);
+  ", [$user->account_ID , $formattedFrom ,  $formattedTo ]);
   
 
 
