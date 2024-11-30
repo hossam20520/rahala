@@ -28,7 +28,38 @@ class RahalaController extends Controller
 {
     //
 
+    public function getStatmentsAll(Request $request , $from , $to ){
+      $user = Auth::user();
+      $results = DB::select("
+     SELECT a.[ID]
+      ,[CodeID]
+      ,[ISID]
+      ,[Debit]
+      ,[Credit]
+      ,[TypeID]     
+      ,[MovementType]
+      ,[Notes]
+      ,a.[IsActive]
+      ,a.[InsertDate]    
+      ,[TypeMobile]
+      ,[Value_Mobile]
+      ,d.CuName
+	  ,c.BName
+	  ,e.TypeName
+  FROM [dbo].[AccounsActivityTb] as a 
 
+inner join [dbo].[CUSTEMPACCOUNTTB] as b on a.CodeID = b.ID 
+inner join CoBranchTb as c on a.BranchID = c.id		
+inner join CurrencyMainTb as d on a.CurenncyID = d.ID
+inner join TypeTb as e on a.TypeID =e.ID
+where a.CodeID = ? and a.InsertDate  between 'date from ' and 'date To'
+  ", [$user->account_ID , $from ,   $to  ]);
+  
+
+
+    return response()->json([  'history' =>   $results   ], 200);
+    
+    }
 
 
     public function setMessage(Request $request){

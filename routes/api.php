@@ -27,6 +27,12 @@ Route::get("device/amanats/trac/{isid}/{code}", "device\RahalaController@TracAma
 
 
 
+
+
+
+Route::get("device/statments/all", "device\RahalaController@getStatmentsAll");
+
+// Get The state طلب توصيل داخلي
 Route::get("device/amanax/status/check/{isid}/{code}", "device\RahalaController@GetAmanaDetailsss");
 
 
@@ -84,8 +90,8 @@ Route::get("device/driver/{isid}/{senderCode}/{rateNumber}/{driver_id}", "device
 
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     
-
-
+                    // كشف حساب الجميع
+    Route::get("device/statment/all/{from}/{to}", "device\RahalaController@getStatmentsAll");
     
 //    كشف حساب السائق
     Route::get("device/driverbill", "device\RahalaController@getBillInfoData");
@@ -147,6 +153,8 @@ Route::get("device/amanats/enter/delvery/{iiscode}", "device\RahalaController@ge
  Route::get("device/sent/", "device\RahalaController@GetSentMoney");
 
  Route::get("device/history/", "device\RahalaController@getTheOwntrans");
+
+ 
 
  Route::post("device/shipment/add", "device\RahalaController@addShipping");
  
