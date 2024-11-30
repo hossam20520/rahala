@@ -31,7 +31,23 @@ class RahalaController extends Controller
 
 
 
+    public function setMessage(Request $request){
 
+
+
+      $recipient_id = $request->recipient_id;
+      $message = $request->message;
+      $user = Auth::user();
+ 
+      DB::insert("
+      INSERT INTO [dbo].[Massge_Uesers]
+          ([CodeID_sendd], [Massge], [CodeID_Resind])
+      VALUES
+          (?,  ? , ?)", [$user->account_ID , $message , $recipient_id]);
+
+    return response()->json([  'peoples' =>    "hello"   ], 200);
+    
+    }
 
     public function getBillInfoData(Request $request){
       $user = Auth::user();

@@ -90,6 +90,8 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 //    كشف حساب السائق
     Route::get("device/driverbill", "device\RahalaController@getBillInfoData");
 
+    Route::post("device/conversation/send", "device\RahalaController@setMessage");
+
  Route::get("device/messages/people/{acc_id}", "device\RahalaController@getMessagePPl");
 
 
