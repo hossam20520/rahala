@@ -28,8 +28,20 @@ class RahalaController extends Controller
 {
     //
 
+   
+public function getPPlMessagedToEach(Request $request){
+  $user = Auth::user();
+  $results = DB::select("
+  SELECT 
+      a.id as AccID, 
+      a.AccName, 
+      a.LogPhone1
+  FROM [dbo].[CUSTEMPACCOUNTTB] as a
+  WHERE a.id <> ?
+", [$user->account_ID  ]);
+return response()->json([  'peoples' =>   $results   ], 200);
 
-
+}
 
     public function getMessagePPl(Request $request){
 

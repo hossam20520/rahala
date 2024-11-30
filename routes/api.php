@@ -87,6 +87,10 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
  Route::get("device/messages/people", "device\RahalaController@getMessagePPl");
 
+ Route::get("device/chat/formasseging", "device\RahalaController@getPPlMessagedToEach");
+
+ 
+
 
 Route::get("device/drivers/", "device\RahalaController@getPackagesDriver");
 
