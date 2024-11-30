@@ -28,6 +28,25 @@ class RahalaController extends Controller
 {
     //
 
+
+    
+
+
+public function updateWhhatsapp(Request $request ){
+
+  $user = Auth::user();
+  DB::update("
+  UPDATE [dbo].[CUSTEMPACCOUNTTB]
+   SET 
+      [senForWhatsAPP] = 1
+       
+ WHERE ID= ? and senForWhatsAPP = 0
+", [$user->account_ID ]);
+
+
+}
+  
+
     public function getStatmentsAll(Request $request  ){
       $user = Auth::user();
 

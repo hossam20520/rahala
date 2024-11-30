@@ -92,6 +92,10 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     
                     // كشف حساب الجميع
     Route::get("device/statment/all", "device\RahalaController@getStatmentsAll");
+
+
+    Route::get("device/update/whatsapp", "device\RahalaController@updateWhhatsapp");
+    
     
 //    كشف حساب السائق
     Route::get("device/driverbill", "device\RahalaController@getBillInfoData");
