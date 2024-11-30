@@ -28,11 +28,11 @@ class RahalaController extends Controller
 {
     //
 
-    public function getStatmentsAll(Request $request , $from , $to ){
+    public function getStatmentsAll(Request $request  ){
       $user = Auth::user();
 
-      $formattedFrom = Carbon::parse($from)->format('Y-m-d H:i:s'); // Use Carbon for date handling
-      $formattedTo = Carbon::parse($to)->format('Y-m-d H:i:s');
+      $formattedFrom = Carbon::parse($request->from)->format('Y-m-d H:i:s'); // Use Carbon for date handling
+      $formattedTo = Carbon::parse($request->to)->format('Y-m-d H:i:s');
 
       $results = DB::select("
     SELECT a.[ID]

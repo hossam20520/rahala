@@ -91,7 +91,7 @@ Route::get("device/driver/{isid}/{senderCode}/{rateNumber}/{driver_id}", "device
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     
                     // كشف حساب الجميع
-    Route::get("device/statment/all/{from}/{to}", "device\RahalaController@getStatmentsAll");
+    Route::get("device/statment/all", "device\RahalaController@getStatmentsAll");
     
 //    كشف حساب السائق
     Route::get("device/driverbill", "device\RahalaController@getBillInfoData");
