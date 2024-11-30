@@ -28,17 +28,72 @@ class RahalaController extends Controller
 {
     //
 
+
+
+
+
+
+    public function getBillInfoData(Request $request){
+      $user = Auth::user();
+      $results = DB::select("
+      SELECT 
+          X.Code_delivery, 
+          X.InsertDate, 
+          X.Quantity, 
+          X.Paid__value, 
+          X.BName, 
+          X.BName as Delivery_placeID, 
+          X.Type_delivery
+      FROM (
+          SELECT 
+              a.Code_delivery, 
+              a.InsertDate, 
+              a.Quantity, 
+              a.Paid__value, 
+              b.BName, 
+              c.BName as Delivery_placeID, 
+              a.Type_delivery, 
+              E.ID AS DriverID
+          FROM [dbo].[Driver_delivery_shipping] as a
+          INNER JOIN CoBranchTb as b ON a.BranchID = b.id
+          INNER JOIN CoBranchTb as c ON c.ID = a.Delivery_placeID
+          INNER JOIN driver AS D ON A.DriverID = D.ID
+          INNER JOIN CUSTEMPACCOUNTTB AS E ON D.Code = E.AccountCode COLLATE Arabic_CI_AS
+      ) AS X
+      WHERE X.Type_delivery = 5 AND X.DriverID = ?
+  ", [$user->account_ID]);
+  
+
+
+    return response()->json([  'peoples' =>   $results   ], 200);
+    
+    }
+
+
    
 public function getPPlMessagedToEach(Request $request){
   $user = Auth::user();
-  $results = DB::select("
-  SELECT 
-      a.id as AccID, 
-      a.AccName, 
-      a.LogPhone1
-  FROM [dbo].[CUSTEMPACCOUNTTB] as a
-  WHERE a.id <> ?
-", [$user->account_ID  ]);
+//   $results = DB::select("
+//   SELECT 
+//       a.id as AccID, 
+//       a.AccName, 
+//       a.LogPhone1
+//   FROM [dbo].[CUSTEMPACCOUNTTB] as a
+//   WHERE a.id <> ?
+// ", [$user->account_ID  ]);
+
+
+$results = DB::select("
+    SELECT 
+        a.id as AccID, 
+        a.AccName, 
+        a.LogPhone1, 
+        'لايوجد رسائل' as last_message,
+        '2024-11-30 00:00:00.000' as created_at
+    FROM [dbo].[CUSTEMPACCOUNTTB] as a
+    WHERE a.id <> ?
+", [$user->account_ID]);
+
 return response()->json([  'peoples' =>   $results   ], 200);
 
 }
