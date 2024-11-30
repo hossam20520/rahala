@@ -252,7 +252,7 @@ class AuthController extends Controller
    
     public function getBranches(Request $request){
 
-         $branches = CoBranchTb::where('TypeBracnh',0)-> get();
+         $branches = CoBranchTb::get();
 
 
          return response()->json(['branches' =>  $branches       ], 200);

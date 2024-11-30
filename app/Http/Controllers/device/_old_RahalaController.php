@@ -31,74 +31,16 @@ class RahalaController extends Controller
 
 
 
-    public function getMessagePPl(Request $request){
-
-      $user = Auth::user();
-      $results = DB::select("
-      SELECT 
-          x.id,
-          x.CodeID_sendd,
-          x.CodeID_Resind,
-          x.name_resend,
-          x.Massge,
-          x.insertdate
-      FROM (
-          SELECT 
-              a.id,
-              a.CodeID_sendd,
-              a.CodeID_Resind,
-              c.AccName as name_resend,
-              a.Massge,
-              a.insertdate
-          FROM [dbo].[Massge_Uesers] as a
-          INNER JOIN [dbo].[CUSTEMPACCOUNTTB] as b ON a.CodeID_sendd = b.id
-          INNER JOIN [dbo].[CUSTEMPACCOUNTTB] as c ON a.CodeID_Resind = c.id
-          WHERE a.CodeID_sendd = ? AND a.CodeID_Resind = ?
-          
-          UNION
-          
-          SELECT 
-              a.id,
-              a.CodeID_sendd,
-              a.CodeID_Resind,
-              c.AccName as name_resend,
-              a.Massge,
-              a.insertdate
-          FROM [dbo].[Massge_Uesers] as a
-          INNER JOIN [dbo].[CUSTEMPACCOUNTTB] as b ON a.CodeID_sendd = b.id
-          INNER JOIN [dbo].[CUSTEMPACCOUNTTB] as c ON a.CodeID_Resind = c.id
-          WHERE a.CodeID_sendd = ? AND a.CodeID_Resind = ?
-      ) AS x
-      ORDER BY x.id ASC
-  ", [$CodeID_sendd, $CodeID_Resind, $CodeID_Resind, $CodeID_sendd]);
-  
- 
-       return response()->json([  'messages' =>   $results   ], 200);
-
-    }
-
-
-
-/////تمت يوم 26-11-2024 //تعديل كود ارسال وتاكد من انه العملية ارسال كود السائق او رق السائق .$user->account_ID 
-
     public function GetBills(Request $request){
 
       $user = Auth::user();
 
  
       
- $results = DB::select("SELECT X.Code_delivery, X.InsertDate, X.Quantity, X.Paid__value, X.BName, 
-           X.BName as Delivery_placeID, X.Type_delivery  
-    FROM (
-        SELECT a.Code_delivery, a.InsertDate, a.Quantity, a.Paid__value, b.BName,
-               c.BName as Delivery_placeID, a.Type_delivery, E.ID AS DriverID
-        FROM [dbo].[Driver_delivery_shipping] AS a 
-        INNER JOIN CoBranchTb AS b ON a.BranchID = b.ID
-        INNER JOIN CoBranchTb AS c ON c.ID = a.Delivery_placeID
-        INNER JOIN driver AS D ON a.DriverID = D.ID
-        INNER JOIN CUSTEMPACCOUNTTB AS E ON D.Code = E.AccountCode COLLATE Arabic_CI_AS
-    ) AS X
-    WHERE X.Type_delivery = 5 AND X.DriverID = ?", [$user->account_ID] );
+ $results = DB::select('select a.Code_delivery , a.InsertDate ,a.Quantity , a.Paid__value , b.BName  , c.BName as Delivery_placeID 
+from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.BranchID = b.id
+ inner join CoBranchTb as c on c.ID = a.Delivery_placeID
+ WHERE A.DriverID='.$user->account_ID );
 
        return response()->json([  'bills' =>   $results  ], 200);
 
@@ -172,7 +114,7 @@ class RahalaController extends Controller
 
 
 
-//مشكلة Where ID fro Driver Sql 
+
  public function getOutAmanat(Request $request ){
 
       $user = Auth::user();
@@ -184,23 +126,18 @@ select a.ISID , a.SenderName COLLATE Arabic_CI_AS as SenderName
 
 , a.SPhone1  COLLATE Arabic_CI_AS as SPhone1  , a.SPhone2   COLLATE Arabic_CI_AS as SPhone2  , a.RecievedName , a.RPhone1 , a.RPhone2
 , b.InsertDate as delivery_InsertDate ,a.TotalPrice , a.BounsValue ,a.OverallTotal ,a.DiscountValue   ,
-a.AddressDescription ,c.BName ,
-CASE WHEN A.DeliveryPlaceID = 7  THEN f.CityName else d.BName end as DeliveryPlaceID
-,a.Qt ,case when a.IsPaid = 0  then 'غير خالص' else 'خالص' end  as IsPaid
+a.AddressDescription ,c.BName ,d.BName as DeliveryPlaceID ,a.Qt ,case when a.IsPaid = 0  then 'غير خالص' else 'خالص' end  as IsPaid
 ,b.DriverID  ,e.DName , a.DeliveredStatus
 from  internalshippingTb as a 
 inner join Driver_delivery_shipping as b on b.ID_Delivery =  a.ID_Delivery 
 inner join CoBranchTb as c on a.BranchID = c.ID 
 inner join CoBranchTb as d on a.DeliveryPlaceID = d.ID 
 inner join DeliveryStatusTb  as e on a.DeliveredStatus	 = e.ID
-INNER JOIN DBO.CitiesTb AS F ON A.City_ID = F.ID
 where d.TypeBracnh = 1 and a.IsActive= 1 
 union 
 select a.ISID , f.AccName , f.LogPhone1 , f.LogPhone2 , a.RecievedName , a.RPhone1 , a.RPhone2
 , b.InsertDate as delivery_InsertDate ,a.TotalPrice , a.BounsValue ,a.OverallTotal ,a.DiscountValue   ,
-a.AddressDescription ,c.BName ,
-CASE WHEN A.DeliveryPlaceID = 7  THEN g.CityName else d.BName end as DeliveryPlaceID , 
-a.Qt,case when a.IsPaid = 0  then 'غير خالص' else 'خالص' end  as IsPaid
+a.AddressDescription ,c.BName ,d.BName ,a.Qt,case when a.IsPaid = 0  then 'غير خالص' else 'خالص' end  as IsPaid
 ,b.DriverID,e.DName , a.DeliveredStatus
 from  ShippingFollwoingTb as a 
 inner join Driver_delivery_shipping as b on b.ID_Delivery =  a.ID_Delivery 
@@ -208,10 +145,9 @@ inner join CoBranchTb as c on a.BranchID = c.ID
 inner join CoBranchTb as d on a.DeliveryPlaceID = d.ID 
 inner join CUSTEMPACCOUNTTB as f on a.CodeID = f.ID
 inner join DeliveryStatusTb  as e on a.DeliveredStatus	 = e.ID
-INNER JOIN DBO.CitiesTb AS G ON A.City_ID = G.ID
 where d.TypeBracnh = 1 and a.IsActive= 1 
 )as x 
-where   x.DeliveredStatus= 2 or x.DeliveredStatus = 15 AND x.DriverID=?", [$user->account_ID]);
+where x.DriverID= ? and x.DeliveredStatus= 2 or x.DeliveredStatus = 15  ", [$user->account_ID]);
      
   return response()->json([  'out_amanats' =>   $results  ], 200);
      
@@ -286,7 +222,13 @@ where x.ISID  = ?
   
       }
 
-//ISID, كود ارسال امنات النقل الداخلي المرسلة مع السائق
+
+
+
+
+
+
+
 
       public function getEnterDeleviery(Request $request , $iiscode){
    
@@ -294,7 +236,7 @@ where x.ISID  = ?
         $user = Auth::user();
        
          $results = DB::select("
-              select * from ( 
+         select * from ( 
 select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
 ,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription,B.DriverID
 ,a.BounsValue,a.Latitude ,a.longitude ,a.MapLink
@@ -303,12 +245,11 @@ inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery
 INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
 INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
 UNION 
-select A.ISID , f.LogPhone1 COLLATE Arabic_CI_AS , f.LogPhone2 COLLATE Arabic_CI_AS , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
+select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
 ,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription ,B.DriverID
 ,a.BounsValue,a.Latitude ,a.longitude ,a.MapLink
-From ShippingFollwoingTb as a 
+From internalshippingTb as a 
 inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
-inner join[dbo].[CUSTEMPACCOUNTTB] as f on a.CodeID = f.id 
 INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
 INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
 
@@ -471,7 +412,7 @@ where x.ISID  = ?
 
 
 
-// (أ) إمكانية تتبيع الأمانة للزبون العاد بواسطة الكود ومعرفة حالة الأمانةTrue
+// (أ) إمكانية تتبيع الأمانة للزبون العاد بواسطة الكود ومعرفة حالة الأمانة
 
  public function TracAmana(Request $request , $isid , $code){
  
@@ -561,9 +502,7 @@ where x.ISID =  ?  and x.DeliveredStatus= 3 and x.Recieved_code =  ?
 
     }
 
-
-
-
+ 
 
  public function InsertDetails(Request $request , $isid , $code , $longitude ,$latitude , $phone , $adress  ){
  
@@ -614,7 +553,7 @@ try {
 
 
 
-// (أ)  كشف يظهر التعاملات  م  ع الشركة للزبون العاديتمت التعديل او تتشتغل صح
+// (أ)  كشف يظهر التعاملات مع الشركة للزبون العادي
 
  public function historyCustomer(Request $request , $phone , $from , $to ){
  
@@ -636,7 +575,7 @@ end as IsPaid ,a.InsertDate ,a.Delivery_InsertDate ,a.Received_Date ,a.OverallTo
 from ShippingFollwoingTb as a inner join DeliveryStatusTb as b on a.DeliveredStatus = b.ID
 inner join CUSTEMPACCOUNTTB as  c on a.CodeID = c.ID 
 ) as x 
-where   x.SPhone1  	+ X.RPhone1 +X.RPhone2  like '%'+ ? +'%'  AND X.InsertDate  BETWEEN  ?  AND  ?
+where   x.SPhone1  + x.SPhone2	+ X.RPhone2 +X.RPhone2  like '%'+ ? +'%'  AND X.InsertDate  BETWEEN  ?  AND  ?
     ", [$phone,   $from , $to  ]);
          
                 return response()->json([  'history' =>   $results  ], 200);
@@ -666,7 +605,7 @@ SELECT a.ISID  , a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID
 FROM [dbo].[internalshippingTb] AS a   
 union  
 SELECT a.ISID, a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver   
-FROM [dbo].ShippingFollwoingTb AS a   
+FROM [dbo].[internalshippingTb] AS a   
 ) as x 
 where x.ISID = ? and x.Recieved_code  + x.Sender_Code   like  '%' + ? +'%'
         ", [$senderCode,  $senderCode, $senderCode, $senderCode, $isid, $senderCode, ]);
@@ -680,14 +619,14 @@ where x.ISID = ? and x.Recieved_code  + x.Sender_Code   like  '%' + ? +'%'
 
 
 
-//  كود جلب العميل تمت عملية التعديل وربط حساب السائق صح 
+//  كود جلب العميل
 public function GetDriver(Request $request , $isid    ){
  
   $results = DB::select("
  select  a.ID  , A.AccName from [dbo].[CUSTEMPACCOUNTTB] as a inner join 
 driver  as b on 
 a.AccountCode  COLLATE Arabic_CI_AS  = b.Code  COLLATE Arabic_CI_AS 
-INNER JOIN Driver_delivery_shipping  AS C ON  b.ID = C.DriverID 
+INNER JOIN Driver_delivery_shipping  AS C ON  A.ID = C.DriverID 
 INNER JOIN Driver_delivery_shipping_Details AS D ON C.Code_delivery= D.Code_delivery
 WHERE D.ISID = ?
 ", [ $isid ]);
@@ -741,7 +680,7 @@ where CodeID = ?
 
 
 
-//ارسال امانة مع التاكسي 
+
  public function GetAmanaEnterDelvery(Request $request){
    
 
@@ -751,34 +690,25 @@ where CodeID = ?
   $results = DB::select("
     select * from ( 
 select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
-,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription,
-F.ID AS DriverID
+,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription,B.DriverID
 ,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
 From internalshippingTb as a 
 inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
 INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
 INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
-INNER JOIN driver AS C ON B.DriverID =C.ID
-INNER JOIN CUSTEMPACCOUNTTB AS F ON C.Code = F.AccountCode  COLLATE Arabic_CI_AS
-
-
 where a.DeliveredStatus= 5 and a.IsActive =1 
 UNION 
-select A.ISID , f.LogPhone1 COLLATE Arabic_CI_AS  , f.LogPhone2 COLLATE Arabic_CI_AS , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
-,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription ,H.ID
+select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
+,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription ,B.DriverID
 ,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
-From ShippingFollwoingTb as a 
+From internalshippingTb as a 
 inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
 INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
 INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
-inner join CUSTEMPACCOUNTTB as f on a.CodeID   = f.ID
-INNER JOIN driver AS G ON B.DriverID =G.ID
-INNER JOIN CUSTEMPACCOUNTTB AS H ON G.Code = H.AccountCode  COLLATE Arabic_CI_AS
 where a.DeliveredStatus= 5 and a.IsActive =1 
 ) as x 
-
-where x.DriverID =?
-", [$user->account_ID]);
+where x.DriverID =  ?
+", [4]);
 // $user->account_ID
             return response()->json([  'amanaenterdelv' =>   $results  ], 200);
 
@@ -788,7 +718,7 @@ where x.DriverID =?
 
 
 
-//حركة امانات التي مع السائق
+
 
   public function getMovsList(Request $request , $type){
    
@@ -797,7 +727,7 @@ where x.DriverID =?
 
  if($type == "1"){
 
-//تمت عملية التعديل علي الامنات المسلمة للفروع وتاكيد عليها من قبل حسن هارون حساب السائق
+
   $results = DB::select("
 select * from ( 
 
@@ -814,7 +744,7 @@ inner join CoBranchTb as c on a.BranchID = c.ID
 inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
-where a.IsActive =1 and f.Type_delivery = 5  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  ) and d.TypeBracnh = 0 
+where a.IsActive =1 and f.Type_delivery = 1  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  ) and d.TypeBracnh = 0 
 union 
 select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
 ,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
@@ -827,7 +757,7 @@ inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
 inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
-where a.IsActive =1 and f.Type_delivery = 5 and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  )and d.TypeBracnh = 0 and a.DeliveredStatus >= 3
+where a.IsActive =1 and f.Type_delivery = 1 and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  )and d.TypeBracnh = 0 
 ) as x 
 where x.DriverID = ? ", [$user->account_ID]);
 
@@ -849,7 +779,7 @@ inner join CoBranchTb as c on a.BranchID = c.ID
 inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
-where a.IsActive =1 and f.Type_delivery = 5  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  ) and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 14 or a.DeliveredStatus= 3 )
+where a.IsActive =1 and f.Type_delivery = 1  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  ) and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 14 or a.DeliveredStatus= 3 )
 union 
 select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
 ,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
@@ -862,9 +792,9 @@ inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
 inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
-where a.IsActive =1 and f.Type_delivery = 5 and (  Type_delivery_staues = 1  )and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 14 or a.DeliveredStatus= 3 )
+where a.IsActive =1 and f.Type_delivery = 1 and (  Type_delivery_staues = 1  )and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 14 or a.DeliveredStatus= 3 )
 ) as x 
-where x.DriverID = 7 ", [$user->account_ID]);
+where x.DriverID = ? ", [$user->account_ID]);
 
 
 }else if($type == "3"){
@@ -884,7 +814,7 @@ inner join CoBranchTb as c on a.BranchID = c.ID
 inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
-where a.IsActive =1 and f.Type_delivery = 5  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  )  and  ( a.DeliveredStatus = 15 or a.DeliveredStatus=8     or a.DeliveredStatus= 9  )
+where a.IsActive =1 and f.Type_delivery = 1  and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  )  and  ( a.DeliveredStatus = 15 or a.DeliveredStatus=8     or a.DeliveredStatus= 9  )
 union 
 select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
 ,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
@@ -897,13 +827,13 @@ inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
 inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
-where a.IsActive =1 and f.Type_delivery = 5 and (  Type_delivery_staues = 1  )and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 15 or a.DeliveredStatus=8     or a.DeliveredStatus= 9  )
+where a.IsActive =1 and f.Type_delivery = 1 and (  Type_delivery_staues = 1  )and d.TypeBracnh = 1 and  ( a.DeliveredStatus = 15 or a.DeliveredStatus=8     or a.DeliveredStatus= 9  )
 ) as x 
-where x.DriverID =  7", [$user->account_ID]);
+where x.DriverID =  ? ", [$user->account_ID]);
 }else if($type == "4"){
 
   $results = DB::select("
-  select * from ( 
+ select * from ( 
 
 select a.ISID , a.SenderName  COLLATE Arabic_CI_AS as SenderName 
 
@@ -918,7 +848,7 @@ inner join CoBranchTb as c on a.BranchID = c.ID
 inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on f.ID_Delivery =a.ID_Delivery_Taxi
-where a.IsActive =1 and f.Type_delivery = 6 and d.TypeBracnh = 0  and e.Type_delivery_staues= 2 and a.DeliveredStatus= 16 or a.DeliveredStatus= 3
+where a.IsActive =1 and f.Type_delivery = 3 and e.Type_delivery_staues= 3  and a.DeliveredStatus= 3 
 union 
 select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
 ,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
@@ -931,9 +861,9 @@ inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on f.ID_Delivery = a.ID_Delivery_Taxi
 inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
-where a.IsActive =1 and f.Type_delivery = 6 and d.TypeBracnh = 0  and e.Type_delivery_staues= 2 and a.DeliveredStatus= 16 or a.DeliveredStatus= 3
+where a.IsActive =1 and f.Type_delivery = 3 and d.TypeBracnh = 1  and e.Type_delivery_staues= 3 and  a.DeliveredStatus= 3 
 ) as x 
-where x.DriverID = 7 ", [$user->account_ID]);
+where x.DriverID = ? ", [$user->account_ID]);
 }else if($type == "5"){
   $results = DB::select("select * from ( 
 
@@ -950,7 +880,7 @@ inner join CoBranchTb as c on a.BranchID = c.ID
 inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on f.ID_Delivery =a.ID_Delivery_Taxi
-where a.IsActive =1 and f.Type_delivery = 6 and d.TypeBracnh = 0  and e.Type_delivery_staues= 3 
+where a.IsActive =1 and f.Type_delivery = 3 and e.Type_delivery_staues= 4
 union 
 select a.ISID ,g.AccName, g.LogPhone1 ,g.LogPhone2 , a.RecievedName , a.RPhone1 ,a.RPhone2 ,a.Qt 
 ,a.TotalPrice ,a.BounsValue ,a.Delivery_InsertDate ,
@@ -963,7 +893,7 @@ inner join CoBranchTb as d on a.DeliveryPlaceID =  d.ID
 inner join Driver_delivery_shipping_Details as e on a.ISID COLLATE Arabic_CI_AS   =e.ISID  COLLATE Arabic_CI_AS 
 inner join Driver_delivery_shipping as f on f.ID_Delivery = a.ID_Delivery_Taxi
 inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
-where a.IsActive =1 and f.Type_delivery = 6 and d.TypeBracnh = 0  and e.Type_delivery_staues= 3 
+where a.IsActive =1 and f.Type_delivery = 3 and d.TypeBracnh = 1  and e.Type_delivery_staues= 4 
 ) as x 
 where x.DriverID = ? 
 ", [$user->account_ID]);
@@ -978,9 +908,7 @@ where x.DriverID = ?
 
 
  public function updateStatus(Request $request , $isid , $codeStatus  , $status ){
-   DB::beginTransaction();
-
-try {
+   
       // $status == 14
       // $status == 15
  $user = Auth::user();
@@ -1004,86 +932,6 @@ try {
          Received_Date = GETDATE()
      WHERE ISID = ?
  ", [$codeStatus,   $status , $isid]);
- 
- /// 1
- DB::update("
-  UPDATE RhallaMobile.DBO.DeliveryStatusTb_Count
-SET DeliveryStatusTb_count -= (
-    SELECT COUNT(b.ISID) 
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-   
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-	)
-	WHERE EXISTS (
-    SELECT b.ISID
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-)
-
-     
- ", [ $isid , $isid]);
- ///2
- DB::update("
-    UPDATE internalshippingTb
-     SET Code_status = ?,
-         DeliveredStatus = ?,
-         Customer_DeliveryDate = GETDATE(),
-         Received_Date = GETDATE()
-     WHERE ISID =?
- ", [$codeStatus,   $status , $isid]);
- ///3 
- DB::update("
-      UPDATE ShippingFollwoingTb
-     SET Code_status = ?,
-         DeliveredStatus = ?,
-         Customer_DeliveryDate = GETDATE(),
-         Received_Date = GETDATE()
-     WHERE ISID =?
- ", [$codeStatus,   $status , $isid]);
- //// 4 
- DB::update("
-       UPDATE RhallaMobile.DBO.DeliveryStatusTb_Count
-SET DeliveryStatusTb_count += (
-    SELECT COUNT(b.ISID) 
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-   
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-	)
-	WHERE EXISTS (
-    SELECT b.ISID
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-)
- ", [$isid, $isid]);
-
-
-
-
-
-
-
-
-
- DB::commit();
-} catch (\Exception $e) {
-    // Rollback transaction if something goes wrong
-    DB::rollBack();
-    throw $e;
-}
- 
- 
 
  return response()->json(['message' => 'Status updated successfully']);
 
@@ -1107,11 +955,11 @@ SET DeliveryStatusTb_count += (
 
 
 
-//تمت عملية التعديل او اضافة رقم العميل لجلب الامنات الخاصة بالعميل  
+
     public function GetStatusTable(Request $request){
-       $user = Auth::user();
+
       
-      $status  =  DeliveryStatusTb_Count::with('status')->where('CodeID' , $user->account_ID )->get();
+      $status  =  DeliveryStatusTb_Count::with('status')->get();
   
 
       return response()->json([  'status' =>    $status ], 200);
@@ -1202,7 +1050,7 @@ SET DeliveryStatusTb_count += (
       return response()->json([  'branches' =>  $branches  , 'category'=>  $category ,       ], 200);
     }
 
-// DeliveredStatus = 13 Update for hasan altargee 2024-09-19
+
     public function addShipping(Request $request){
      
    
@@ -1211,32 +1059,11 @@ SET DeliveryStatusTb_count += (
 
        if($request->type == "ORG" && $request->edit == "yes" ){
 
-		    $updateOne = DB::select("UPDATE RhallaMobile.DBO.DeliveryStatusTb_Count
-SET DeliveryStatusTb_count -= (
-    SELECT COUNT(b.ISID) 
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-   
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-	)
-	WHERE EXISTS (
-    SELECT b.ISID
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-)
-"
-, [ $isid  , $isid  ]);
-
         $ship =   ShippingFollwoingTb::where('id' , $request->ID )->update([
           'RecievedName'=> $request->RecievedName,
           'RPhone1'=> $request->RPhone1,
           'RPhone2'=> $request->RPhone2,
-          'DeliveredStatus' =>'13'
+          
          
         ]);
 
@@ -1261,28 +1088,6 @@ SET DeliveryStatusTb_count -= (
 
 
        if($request->edit == "yes"){
-		     
-           $updateOne = DB::select("UPDATE RhallaMobile.DBO.DeliveryStatusTb_Count
-    SET DeliveryStatusTb_count += (
-    SELECT COUNT(b.ISID) 
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-   
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-	)
-	WHERE EXISTS (
-    SELECT b.ISID
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-)
-"
-, [ $isid  , $isid  ]);
-		   
 
         RhallaMobile_FollowingDetails::where('Sh_followingID', $request->ID)->delete();
         $ship =  RhallaMobile_ShippingFollwoingTb::where('id' , $request->ID )->update([
@@ -1376,7 +1181,7 @@ SET DeliveryStatusTb_count -= (
 
     }
 
-//update for 'CodeID',$user->account_ID  get ueser from AccounsActivityTb 2024-09-20 for hasan altargee 
+
     public function getTheOwntrans(Request $request){
 
       $from_date = $request->from_date;
@@ -1384,12 +1189,12 @@ SET DeliveryStatusTb_count -= (
       $to_date = $request->to_date;
 
       $type =  $request->type;
-  $user = Auth::user();
+
  if($type == "ALL"){
-   $accActivtb  = AccounsActivityTb::with('branch' , 'currency')->where('CodeID',$user->account_ID )->whereBetween('InsertDate', [$from_date, $to_date])->get();
+   $accActivtb  = AccounsActivityTb::with('branch' , 'currency')->whereBetween('InsertDate', [$from_date, $to_date])->get();
 
  }else{
-   $accActivtb  = AccounsActivityTb::with('branch' , 'currency')->where('CodeID',$user->account_ID )->where('TypeMobile' , $type)->whereBetween('InsertDate', [$from_date, $to_date])->get();
+   $accActivtb  = AccounsActivityTb::with('branch' , 'currency')->where('TypeMobile' , $type)->whereBetween('InsertDate', [$from_date, $to_date])->get();
 
  }
 

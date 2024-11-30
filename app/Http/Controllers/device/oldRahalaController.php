@@ -30,6 +30,9 @@ class RahalaController extends Controller
 
 
 
+    
+
+
 
     public function getMessagePPl(Request $request){
 
@@ -73,13 +76,19 @@ class RahalaController extends Controller
   ", [$CodeID_sendd, $CodeID_Resind, $CodeID_Resind, $CodeID_sendd]);
   
  
-       return response()->json([  'messages' =>   $results   ], 200);
+       return response()->json([  'bills' =>   $results  ], 200);
 
     }
 
 
 
-/////تمت يوم 26-11-2024 //تعديل كود ارسال وتاكد من انه العملية ارسال كود السائق او رق السائق .$user->account_ID 
+
+
+
+
+
+
+////////تعديل كود ارسال وتاكد من انه العملية ارسال كود السائق او رق السائق .$user->account_ID 
 
     public function GetBills(Request $request){
 
@@ -87,19 +96,24 @@ class RahalaController extends Controller
 
  
       
- $results = DB::select("SELECT X.Code_delivery, X.InsertDate, X.Quantity, X.Paid__value, X.BName, 
-           X.BName as Delivery_placeID, X.Type_delivery  
-    FROM (
-        SELECT a.Code_delivery, a.InsertDate, a.Quantity, a.Paid__value, b.BName,
-               c.BName as Delivery_placeID, a.Type_delivery, E.ID AS DriverID
-        FROM [dbo].[Driver_delivery_shipping] AS a 
-        INNER JOIN CoBranchTb AS b ON a.BranchID = b.ID
-        INNER JOIN CoBranchTb AS c ON c.ID = a.Delivery_placeID
-        INNER JOIN driver AS D ON a.DriverID = D.ID
-        INNER JOIN CUSTEMPACCOUNTTB AS E ON D.Code = E.AccountCode COLLATE Arabic_CI_AS
-    ) AS X
-    WHERE X.Type_delivery = 5 AND X.DriverID = ?", [$user->account_ID] );
+ $results = DB::select(' select a.Code_delivery , a.InsertDate ,a.Quantity , a.Paid__value , b.BName  , c.BName as Delivery_placeID,a.Type_delivery 
+from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.BranchID = b.id
+ inner join CoBranchTb as c on c.ID = a.Delivery_placeID
+ WHERE a.Type_delivery= 5 and A.DriverID=7');
 
+
+
+//  SELECT X.Code_delivery , X.InsertDate ,X.Quantity , X.Paid__value , X.BName  , X.BName as Delivery_placeID , x.Type_delivery  FROM (
+//   select a.Code_delivery , a.InsertDate ,a.Quantity , a.Paid__value , b.BName  ,
+//   c.BName as Delivery_placeID,a.Type_delivery  ,E.ID	AS DriverID
+//   from [dbo].[Driver_delivery_shipping] as a  inner join CoBranchTb as b on a.BranchID = b.id
+//    inner join CoBranchTb as c on c.ID = a.Delivery_placeID
+//    INNER JOIN driver AS D ON A.DriverID = D.ID 
+//    INNER JOIN  CUSTEMPACCOUNTTB AS E ON D.Code  = E.AccountCode  COLLATE Arabic_CI_AS
+//    ) AS X 
+//    WHERE X.Type_delivery= 5 and X.DriverID =?
+ 
+//.$user->account_ID 
        return response()->json([  'bills' =>   $results  ], 200);
 
     }
@@ -172,7 +186,7 @@ class RahalaController extends Controller
 
 
 
-//مشكلة Where ID fro Driver Sql 
+//تمت عمليةو التعديل كود جلب الامانات خارف الفروع
  public function getOutAmanat(Request $request ){
 
       $user = Auth::user();
@@ -422,6 +436,12 @@ where x.ISID  = ?
        
 
     }
+
+
+
+
+
+
 
 
 
@@ -751,34 +771,26 @@ where CodeID = ?
   $results = DB::select("
     select * from ( 
 select A.ISID , A.SPhone1 , A.SPhone2 , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
-,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription,
-F.ID AS DriverID
+,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription,B.DriverID
 ,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
 From internalshippingTb as a 
 inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
 INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
 INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
-INNER JOIN driver AS C ON B.DriverID =C.ID
-INNER JOIN CUSTEMPACCOUNTTB AS F ON C.Code = F.AccountCode  COLLATE Arabic_CI_AS
-
-
 where a.DeliveredStatus= 5 and a.IsActive =1 
 UNION 
 select A.ISID , f.LogPhone1 COLLATE Arabic_CI_AS  , f.LogPhone2 COLLATE Arabic_CI_AS , A.RecievedName , A.RPhone1 , A.RPhone2 ,  CASE WHEN A.IsPaid = 0   THEN 'خالص'ELSE 'غير خالص' END AS IsPaid 
-,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription ,H.ID
+,B.Code_delivery ,A.TotalPrice ,A.TaxiValue ,A.Qt ,A.OverallTotal ,E.BName  AS BranchID ,D.BName AS DeliveryPlaceID,A.AddressDescription ,B.DriverID
 ,a.BounsValue , a.longitude ,a.Latitude ,a.MapLink 
 From ShippingFollwoingTb as a 
 inner join Driver_delivery_shipping as b on a.ID_Delivery_Taxi = b.ID_Delivery 
 INNER JOIN CoBranchTb AS E ON A.BranchID = E.ID 
 INNER JOIN CoBranchTb AS D ON A.DeliveryPlaceID = D.ID 
 inner join CUSTEMPACCOUNTTB as f on a.CodeID   = f.ID
-INNER JOIN driver AS G ON B.DriverID =G.ID
-INNER JOIN CUSTEMPACCOUNTTB AS H ON G.Code = H.AccountCode  COLLATE Arabic_CI_AS
 where a.DeliveredStatus= 5 and a.IsActive =1 
 ) as x 
-
-where x.DriverID =?
-", [$user->account_ID]);
+where x.DriverID =7
+", [4]);
 // $user->account_ID
             return response()->json([  'amanaenterdelv' =>   $results  ], 200);
 
@@ -829,7 +841,7 @@ inner join Driver_delivery_shipping as f on e.Code_delivery = f.Code_delivery
 inner join CUSTEMPACCOUNTTB as  g on a.CodeID = g.ID
 where a.IsActive =1 and f.Type_delivery = 5 and (  Type_delivery_staues = 1 OR  Type_delivery_staues =2  )and d.TypeBracnh = 0 and a.DeliveredStatus >= 3
 ) as x 
-where x.DriverID = ? ", [$user->account_ID]);
+where x.DriverID = 7 ", [$user->account_ID]);
 
 }else if($type == "2"){
 
@@ -978,9 +990,7 @@ where x.DriverID = ?
 
 
  public function updateStatus(Request $request , $isid , $codeStatus  , $status ){
-   DB::beginTransaction();
-
-try {
+   
       // $status == 14
       // $status == 15
  $user = Auth::user();
@@ -1004,86 +1014,6 @@ try {
          Received_Date = GETDATE()
      WHERE ISID = ?
  ", [$codeStatus,   $status , $isid]);
- 
- /// 1
- DB::update("
-  UPDATE RhallaMobile.DBO.DeliveryStatusTb_Count
-SET DeliveryStatusTb_count -= (
-    SELECT COUNT(b.ISID) 
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-   
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-	)
-	WHERE EXISTS (
-    SELECT b.ISID
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-)
-
-     
- ", [ $isid , $isid]);
- ///2
- DB::update("
-    UPDATE internalshippingTb
-     SET Code_status = ?,
-         DeliveredStatus = ?,
-         Customer_DeliveryDate = GETDATE(),
-         Received_Date = GETDATE()
-     WHERE ISID =?
- ", [$codeStatus,   $status , $isid]);
- ///3 
- DB::update("
-      UPDATE ShippingFollwoingTb
-     SET Code_status = ?,
-         DeliveredStatus = ?,
-         Customer_DeliveryDate = GETDATE(),
-         Received_Date = GETDATE()
-     WHERE ISID =?
- ", [$codeStatus,   $status , $isid]);
- //// 4 
- DB::update("
-       UPDATE RhallaMobile.DBO.DeliveryStatusTb_Count
-SET DeliveryStatusTb_count += (
-    SELECT COUNT(b.ISID) 
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-   
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-	)
-	WHERE EXISTS (
-    SELECT b.ISID
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-)
- ", [$isid, $isid]);
-
-
-
-
-
-
-
-
-
- DB::commit();
-} catch (\Exception $e) {
-    // Rollback transaction if something goes wrong
-    DB::rollBack();
-    throw $e;
-}
- 
- 
 
  return response()->json(['message' => 'Status updated successfully']);
 
@@ -1211,27 +1141,6 @@ SET DeliveryStatusTb_count += (
 
        if($request->type == "ORG" && $request->edit == "yes" ){
 
-		    $updateOne = DB::select("UPDATE RhallaMobile.DBO.DeliveryStatusTb_Count
-SET DeliveryStatusTb_count -= (
-    SELECT COUNT(b.ISID) 
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-   
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-	)
-	WHERE EXISTS (
-    SELECT b.ISID
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-)
-"
-, [ $isid  , $isid  ]);
-
         $ship =   ShippingFollwoingTb::where('id' , $request->ID )->update([
           'RecievedName'=> $request->RecievedName,
           'RPhone1'=> $request->RPhone1,
@@ -1261,28 +1170,6 @@ SET DeliveryStatusTb_count -= (
 
 
        if($request->edit == "yes"){
-		     
-           $updateOne = DB::select("UPDATE RhallaMobile.DBO.DeliveryStatusTb_Count
-    SET DeliveryStatusTb_count += (
-    SELECT COUNT(b.ISID) 
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-   
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-	)
-	WHERE EXISTS (
-    SELECT b.ISID
-    FROM RhallaMobile.DBO.ShippingFollwoingTb as b 
-    WHERE b.ISID = ? 
-    AND DeliveryStatusTb_Count.CodeID = b.CodeID 
-    AND DeliveryStatusTb_Count.DeliveryStatusTb_ID= b.DeliveredStatus 
-    AND b.ISID COLLATE Arabic_CI_AS =b.ISID COLLATE Arabic_CI_AS
-)
-"
-, [ $isid  , $isid  ]);
-		   
 
         RhallaMobile_FollowingDetails::where('Sh_followingID', $request->ID)->delete();
         $ship =  RhallaMobile_ShippingFollwoingTb::where('id' , $request->ID )->update([

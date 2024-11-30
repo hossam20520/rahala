@@ -27,10 +27,12 @@ Route::get("device/amanats/trac/{isid}/{code}", "device\RahalaController@TracAma
 
 
 
-Route::get("device/amana/status/check/{isid}/{code}", "device\RahalaController@GetAmanaDetailsss");
+Route::get("device/amanax/status/check/{isid}/{code}", "device\RahalaController@GetAmanaDetailsss");
 
 
+Route::get("device/amanax/insert/update/{isid}/{code}/{longitude}/{latitude}/{phone}/{adress}", "device\RahalaController@InsertDetails");
 
+ 
 //--------------------------- Reset Password  ---------------------------
 
 Route::group([
@@ -81,6 +83,9 @@ Route::get("device/driver/{isid}/{senderCode}/{rateNumber}/{driver_id}", "device
 
 
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
+    
+
+ Route::get("device/messages/people", "device\RahalaController@getMessagePPl");
 
 
 Route::get("device/drivers/", "device\RahalaController@getPackagesDriver");
