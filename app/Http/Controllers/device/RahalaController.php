@@ -67,9 +67,7 @@ return response()->json([  'peoples' =>   $results   ], 200);
           INNER JOIN [dbo].[CUSTEMPACCOUNTTB] as b ON a.CodeID_sendd = b.id
           INNER JOIN [dbo].[CUSTEMPACCOUNTTB] as c ON a.CodeID_Resind = c.id
           WHERE a.CodeID_sendd = ? AND a.CodeID_Resind = ?
-          
           UNION
-          
           SELECT 
               a.id,
               a.CodeID_sendd,
