@@ -732,25 +732,48 @@ where   x.SPhone1  	+ X.RPhone1 +X.RPhone2  like '%'+ ? +'%'  AND X.InsertDate  
 // جلب الامانة للمعرفة مقيمة او لاء
  public function checkRatedPackage(Request $request , $isid , $senderCode   ){
  
-          $results = DB::select("
-select x.ISID,case when x.Sender_Code =  ?  then CodeID_StauesSTarDorDRiver  
+//           $results = DB::select("
+// select x.ISID,case when x.Sender_Code =  ?  then CodeID_StauesSTarDorDRiver  
 
+// when x.Recieved_code =  ?  then StatuesForStarDriver  
+
+// end  as cloim , 
+// case when x.Sender_Code = ?  then 1 
+// when x.Recieved_code = ?  then 2  
+// end Code_status 
+// from ( 
+
+// SELECT a.ISID  , a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver  
+// FROM [dbo].[internalshippingTb] AS a   
+// union  
+// SELECT a.ISID, a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver   
+// FROM [dbo].ShippingFollwoingTb AS a   
+// ) as x 
+// where x.ISID = ? and x.Recieved_code  + x.Sender_Code   like  '%' + ? +'%'
+//         ", [$senderCode,  $senderCode, $senderCode, $senderCode, $isid, $senderCode, ]);
+
+$results = DB::select("select x.ISID,case when x.Sender_Code = ? then CodeID_StauesSTarDorDRiver  
 when x.Recieved_code =  ?  then StatuesForStarDriver  
-
 end  as cloim , 
 case when x.Sender_Code = ?  then 1 
-when x.Recieved_code = ?  then 2  
-end Code_status 
+when x.Recieved_code = ? then 2  
+end Code_status   
+,e.ID  as DRIVER_ID 
 from ( 
-
-SELECT a.ISID  , a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver  
+SELECT a.ISID  , a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver  ,a.ID_Delivery 
 FROM [dbo].[internalshippingTb] AS a   
 union  
-SELECT a.ISID, a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver   
+SELECT a.ISID, a.Recieved_code , Sender_Code , a.StatuesForStarDriver , CodeID_StauesSTarDorDRiver ,a.ID_Delivery  
 FROM [dbo].ShippingFollwoingTb AS a   
 ) as x 
-where x.ISID = ? and x.Recieved_code  + x.Sender_Code   like  '%' + ? +'%'
+inner join Driver_delivery_shipping  as b  on x .ID_Delivery  = b.ID_Delivery
+inner join driver as c on b.DriverID = c.ID
+inner  join [CUSTEMPACCOUNTTB] as e on c.accontID = e.AccID
+where x.ISID = ? and x.Recieved_code  + x.Sender_Code   like  '%' + ? +'%'
         ", [$senderCode,  $senderCode, $senderCode, $senderCode, $isid, $senderCode, ]);
+
+
+        
              
                     return response()->json([  'check' =>   $results  ], 200);
         
