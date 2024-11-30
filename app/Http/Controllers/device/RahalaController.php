@@ -809,36 +809,45 @@ WHERE D.ISID = ?
 public function UpdateRate(Request $request , $isid  , $senderCode   , $rateNumber  , $driver_id){
  
   
-  $updateOne = DB::select("
+  DB::beginTransaction();
+
+  try {
+
+  $updateOne = DB::update("
 update [internalshippingTb] set CodeID_StauesSTarDorDRiver =1 where ISID=  ?  and Sender_Code = ?
 ", [ $isid  , $senderCode  ]);
 
 
 
-$updateTow = DB::select("
+$updateTow = DB::update("
 update [internalshippingTb] set StatuesForStarDriver = 1 where ISID= ?  and Recieved_code = ?
 ", [ $isid  , $senderCode  ]);
 
 
-$updateThree = DB::select("
+$updateThree = DB::update("
 update ShippingFollwoingTb set CodeID_StauesSTarDorDRiver =1 where ISID=  ?  and Sender_Code =  ?
 ", [ $isid  , $senderCode  ]);
 
 
-$updateFour = DB::select("
+$updateFour = DB::update("
 update ShippingFollwoingTb set StatuesForStarDriver =1 where ISID=  ? and Recieved_code  = ?
 ", [ $isid  , $senderCode  ]);
 
 
-$updateFive = DB::select("
+$updateFive = DB::update("
 update Driver_Rating_Table set Stars_Drivers += 
   ? , NumberofUsers +=1 , Stars +=5
 where CodeID = ?
 ", [ $rateNumber  , $driver_id]);
  
-            return response()->json([  'driver' =>    "success"  ], 200);
+     return response()->json([  'driver' =>    "success"  ], 200);
 
-            
+     DB::commit();
+} catch (\Exception $e) {
+    // Rollback transaction if something goes wrong
+    DB::rollBack();
+    throw $e;
+}        
  
     }
 
