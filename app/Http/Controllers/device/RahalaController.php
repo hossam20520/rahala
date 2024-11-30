@@ -56,7 +56,7 @@ inner join [dbo].[CUSTEMPACCOUNTTB] as b on a.CodeID = b.id
 inner join CoBranchTb as c on a.BranchID = c.id		
 inner join CurrencyMainTb as d on a.CurenncyID = d.ID
 inner join TypeTb as e on a.TypeID =e.ID
-where a.CodeID = ? and a.InsertDate  between ?  and ?
+where a.CodeID = ? and a.InsertDate  between ?  and ? and a.[IsActive] = 1
   ", [$user->account_ID , $formattedFrom ,  $formattedTo ]);
   
 
