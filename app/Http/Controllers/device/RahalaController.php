@@ -47,9 +47,8 @@ return response()->json([  'peoples' =>   $results   ], 200);
 
       $user = Auth::user();
 
-      return response()->json([  'messages' =>   $user  ], 200);
-      $results = DB::select("
-      SELECT 
+   
+      $results = DB::select("SELECT 
           x.id,
           x.CodeID_sendd,
           x.CodeID_Resind,
@@ -83,8 +82,7 @@ return response()->json([  'peoples' =>   $results   ], 200);
           INNER JOIN [dbo].[CUSTEMPACCOUNTTB] as c ON a.CodeID_Resind = c.id
           WHERE a.CodeID_sendd = ? AND a.CodeID_Resind = ?
       ) AS x
-      ORDER BY x.id ASC
-  ", [ $user->account_ID  , $acc_id, $acc_id ,  $user->account_ID ]);
+      ORDER BY x.id ASC", [ $user->account_ID  , $acc_id, $acc_id ,  $user->account_ID ]);
   
  
        return response()->json([  'messages' =>   $results   ], 200);
