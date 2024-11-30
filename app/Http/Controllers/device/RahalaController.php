@@ -43,7 +43,7 @@ return response()->json([  'peoples' =>   $results   ], 200);
 
 }
 
-    public function getMessagePPl(Request $request){
+    public function getMessagePPl(Request $request , $acc_id ){
 
       $user = Auth::user();
       $results = DB::select("
@@ -82,7 +82,7 @@ return response()->json([  'peoples' =>   $results   ], 200);
           WHERE a.CodeID_sendd = ? AND a.CodeID_Resind = ?
       ) AS x
       ORDER BY x.id ASC
-  ", [$CodeID_sendd, $CodeID_Resind, $CodeID_Resind, $CodeID_sendd]);
+  ", [$user->account_ID  , $acc_id, $acc_id ,  $user->account_ID ]);
   
  
        return response()->json([  'messages' =>   $results   ], 200);

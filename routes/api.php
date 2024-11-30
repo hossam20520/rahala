@@ -85,7 +85,7 @@ Route::get("device/driver/{isid}/{senderCode}/{rateNumber}/{driver_id}", "device
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     
 
- Route::get("device/messages/people", "device\RahalaController@getMessagePPl");
+ Route::get("device/messages/people/{acc_id}", "device\RahalaController@getMessagePPl");
 
  Route::get("device/chat/formasseging", "device\RahalaController@getPPlMessagedToEach");
 
